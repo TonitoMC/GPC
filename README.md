@@ -1,2 +1,3 @@
 # Laboratorio 1
-Entregas para el curso de Gráficas por Computadora
+## Entrega 1 (Día del Lab)
+Implementa un algoritmo Scanline, únicamente funciona para el polígono 3.
