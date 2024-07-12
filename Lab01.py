@@ -33,6 +33,8 @@ pol3 = [(377, 249), (411, 197), (436, 249)]
 pol4 = [(413, 177), (448, 159), (502, 88), (553, 53), (535, 36), (676, 37), (660, 52), (750, 145), (761, 179), (672, 192),
         (659, 214), (615, 214), (632, 230), (580, 230), (597, 215), (552, 214), (517, 144), (466, 180)]
 
+pol5 = [(682, 175),  (708, 120), (735, 148), (739, 170)]
+
 while isRunning:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -44,10 +46,11 @@ while isRunning:
     pygame.display.flip()
     clock.tick(60)
     rend.glClear()
-    #rend.glFill(pol1, (1,1,1))
+    rend.glFill(pol1, (1,1,1))
     rend.glFill(pol2, (1,1,1))
     rend.glFill(pol3, (1,1,1))
-    #rend.glFill(pol4, (1,1,1))
+    rend.glFill(pol4, (1,1,1))
+    rend.glFill(pol5, (0,0,0))
     #poligono(pol1)
     #poligono(pol2)
     #poligono(pol3)

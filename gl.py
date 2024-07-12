@@ -102,15 +102,24 @@ class Renderer(object):
         min_y = min(coords_y)
         max_y = max(coords_y)
         #Recorre las lineas en Y una por una, no se llena la linea de "tope" ni la linea de hasta abajo
-        for i in range(min_y, max_y):
-            validCoords = []
-            validCoords += [coord for coord in listaPuntosConEdges if coord[1] == i]
+        for y in range(min_y + 1, max_y):
+            #Crea una lista ordenada por los valores de X de las coordenadas con la misma coordenada y
+            validCoords = [coord for coord in listaPuntosConEdges if coord[1] == y]
             sortedCoords = sorted(validCoords, key=lambda x: x[0])
-            for x in range(len(sortedCoords) - 1):
+
+            #Verifica que tenga mas de un elemento
+            if len(sortedCoords) < 2:
+                continue
+
+            #Recorre para eliminar elementos con un valor de X consecutivo (Lineas horizontales)
+            x = 1
+            while x < len(sortedCoords):
                 if sortedCoords[x][0] == sortedCoords[x - 1][0] + 1:
-                    sortedCoords.remove(sortedCoords[x-1])
-            print (sortedCoords)
-            for p in range(0, len(sortedCoords) - 1, 2):  # Increment p by 2 each time
+                    sortedCoords.pop(x - 1)
+                else:
+                    x += 1
+            #Rellena el poligono dibujando lineas
+            for p in range(0, len(sortedCoords) - 1, 2):
                 self.glLine(sortedCoords[p], sortedCoords[p + 1], color)
 
     #glLine pero retorna una lista de tuplas con los puntos que dibujo
