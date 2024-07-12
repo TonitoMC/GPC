@@ -89,21 +89,29 @@ class Renderer(object):
         listaPuntosConEdges = [p for p in listaPuntos]
         #Dibuja el poligono
         for i in range(len(listaPuntos)):
-            listaPuntosConEdges += self.glLineWithPoints(listaPuntos[i], listaPuntos[(i + 1) % len(listaPuntos)], color)
+            listaPuntosConEdges += [
+                punto for punto in self.glLineWithPoints(listaPuntos[i], listaPuntos[(i + 1) % len(listaPuntos)], color)
+                if punto not in listaPuntosConEdges
+            ]
         #Encuentra las coordenadas
-        coords_x = [coord[0] for coord in listaPuntos]
-        coords_y = [coord[1] for coord in listaPuntos]
+        coords_x = [coord[0] for coord in listaPuntosConEdges]
+        coords_y = [coord[1] for coord in listaPuntosConEdges]
 
         min_x = min(coords_x)
         max_x = max(coords_x)
         min_y = min(coords_y)
         max_y = max(coords_y)
         #Recorre las lineas en Y una por una, no se llena la linea de "tope" ni la linea de hasta abajo
-        for i in range(min_y + 1, max_y):
+        for i in range(min_y, max_y):
             validCoords = []
             validCoords += [coord for coord in listaPuntosConEdges if coord[1] == i]
-            for p in range(0, len(validCoords) - 1, 2):  # Increment p by 2 each time
-                self.glLine(validCoords[p], validCoords[p + 1], color)
+            sortedCoords = sorted(validCoords, key=lambda x: x[0])
+            for x in range(len(sortedCoords) - 1):
+                if sortedCoords[x][0] == sortedCoords[x - 1][0] + 1:
+                    sortedCoords.remove(sortedCoords[x-1])
+            print (sortedCoords)
+            for p in range(0, len(sortedCoords) - 1, 2):  # Increment p by 2 each time
+                self.glLine(sortedCoords[p], sortedCoords[p + 1], color)
 
     #glLine pero retorna una lista de tuplas con los puntos que dibujo
     def glLineWithPoints(self, v0, v1, color):
