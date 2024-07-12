@@ -51,17 +51,4 @@ while isRunning:
     rend.glFill(pol3, (1,1,1))
     rend.glFill(pol4, (1,1,1))
     rend.glFill(pol5, (0,0,0))
-    #poligono(pol1)
-    #poligono(pol2)
-    #poligono(pol3)
-    #poligono(pol4)
-
-    #for x in range(0, width, 10):
-    #   rend.glLine(punto0,(x, height), (0,0,0))
-    #for x in range(0, width, 10):
-    #    rend.glLine(punto0, (x, 0), (0,0,0))
-    #for x in range (0, height, 10):
-    #    rend.glLine(punto0, (0,x), (0,0,0))
-    #for x in range (0, height, 10):
-    #    rend.glLine(punto0, (width, x), (0, 0, 0))
 pygame.quit()
