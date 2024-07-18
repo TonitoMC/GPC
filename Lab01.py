@@ -19,6 +19,7 @@ rend = Renderer(screen)
 rend.glColor(1,0,1)
 rend.glClearColor(0,0,0)
 
+#Funcion para dibujar los bordes del poligono
 def poligono(listaPuntos):
     for i in range(len(listaPuntos)):
         rend.glLine(listaPuntos[i],listaPuntos[(i + 1)%len(listaPuntos)], (1,1,1))
@@ -45,10 +46,17 @@ while isRunning:
                 isRunning = False
     pygame.display.flip()
     clock.tick(60)
-    rend.glClear()
-    rend.glFill(pol1, (1,1,1))
-    rend.glFill(pol2, (1,1,1))
-    rend.glFill(pol3, (1,1,1))
-    rend.glFill(pol4, (1,1,1))
-    rend.glFill(pol5, (0,0,0))
+    #Dibuja los poligonos con relleno
+    rend.glFill(pol1, (0, 0, 1))
+    rend.glFill(pol2, (0, 1, 0))
+    rend.glFill(pol3, (0, 1, 1))
+    rend.glFill(pol4, (1, 0, 0))
+    rend.glFill(pol5, (1, 0, 1))
+    #Dibuja los bordes de los poligonos
+    poligono(pol1)
+    poligono(pol2)
+    poligono(pol3)
+    poligono(pol4)
+    poligono(pol5)
+
 pygame.quit()

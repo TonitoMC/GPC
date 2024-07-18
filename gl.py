@@ -12,8 +12,6 @@ def dword(d):
     # 4 bytes
     return struct.pack("=l", d)
 
-
-
 class Renderer(object):
     def __init__(self, screen):
         self.screen = screen
@@ -84,92 +82,50 @@ class Renderer(object):
             self.screen.set_at((x, self.height - 1 - y), color)
             self.frameBuffer[x][y] = color
 
-    #Implementacion de scanline
+    #Dibuja poligonos con relleno
     def glFill(self, listaPuntos, color):
-        listaPuntosConEdges = [p for p in listaPuntos]
-        #Dibuja el poligono
+        #Dibuja las lineas del poligono
         for i in range(len(listaPuntos)):
-            listaPuntosConEdges += [
-                punto for punto in self.glLineWithPoints(listaPuntos[i], listaPuntos[(i + 1) % len(listaPuntos)], color)
-                if punto not in listaPuntosConEdges
-            ]
-        #Encuentra las coordenadas
-        coords_x = [coord[0] for coord in listaPuntosConEdges]
-        coords_y = [coord[1] for coord in listaPuntosConEdges]
+            self.glLine(listaPuntos[i], listaPuntos[(i + 1) % len(listaPuntos)], color)
 
+        #Encuentra las coordenadas X y Y
+        coords_x = [coord[0] for coord in listaPuntos]
+        coords_y = [coord[1] for coord in listaPuntos]
+
+        #Encuentra los minimos y maximos en X y Y para crear el "Boundry Box"
         min_x = min(coords_x)
         max_x = max(coords_x)
         min_y = min(coords_y)
         max_y = max(coords_y)
-        #Recorre las lineas en Y una por una, no se llena la linea de "tope" ni la linea de hasta abajo
-        for y in range(min_y + 1, max_y):
-            #Crea una lista ordenada por los valores de X de las coordenadas con la misma coordenada y
-            validCoords = [coord for coord in listaPuntosConEdges if coord[1] == y]
-            sortedCoords = sorted(validCoords, key=lambda x: x[0])
 
-            #Verifica que tenga mas de un elemento
-            if len(sortedCoords) < 2:
-                continue
+        #Se recorre todo el "Boundry Box" y se determina si el punto se encuentra dentro, se colorea en caso de estarlo
+        for i in range(min_y, max_y + 1):
+            for j in range(min_x, max_x + 1):
+                if self.pointInPolygon(listaPuntos, j, i):
+                    self.glPoint(j, i, color)
 
-            #Recorre para eliminar elementos con un valor de X consecutivo (Lineas horizontales)
-            x = 1
-            while x < len(sortedCoords):
-                if sortedCoords[x][0] == sortedCoords[x - 1][0] + 1:
-                    sortedCoords.pop(x - 1)
-                else:
-                    x += 1
-            #Rellena el poligono dibujando lineas
-            for p in range(0, len(sortedCoords) - 1, 2):
-                self.glLine(sortedCoords[p], sortedCoords[p + 1], color)
-
-    #glLine pero retorna una lista de tuplas con los puntos que dibujo
-    def glLineWithPoints(self, v0, v1, color):
-        points = []
-        x0 = int(v0[0])
-        x1 = int(v1[0])
-        y0 = int(v0[1])
-        y1 = int(v1[1])
-
-        # Algoritmo de Lineas de Bresenham
-
-        if x0 == x1 and y0 == y1:
-            self.glPoint(x0, y0, color)
-
-        dx = abs(x1 - x0)
-        dy = abs(y1 - y0)
-
-        steep = dy > dx
-
-        if steep:
-            x0, y0 = y0, x0
-            x1, y1 = y1, x1
-
-        if x1 < x0:
-            x0, x1 = x1, x0
-            y0, y1 = y1, y0
-
-        dx = abs(x1 - x0)
-        dy = abs(y1 - y0)
-
-        offset = 0
-        limit = 0.5
-        m = dy / dx
-        y = y0
-        for x in range(x0, x1 + 1):
-            if steep:
-                self.glPoint(y, x, color or self.currColor)
-                points.append((y,x))
-            else:
-                self.glPoint(x, y, color or self.currColor)
-                points.append((x,y))
-            offset += m
-            if offset >= limit:
-                if y0 < y1:
-                    y += 1
-                else:
-                    y -= 1
-                limit += 1
-        return points
+    #Determina si un punto se encuentra dentro de un poligono, Raycasting
+    def pointInPolygon(self, listaPuntos, x, y):
+        #Se inicializan las condiciones iniciales
+        n = len(listaPuntos)
+        inside = False
+        x1, y1 = listaPuntos[0]
+        #Se recorre la lista de manera que se regrese al primer punto (para cerrar el poligono)
+        for i in range(n + 1):
+            x2, y2 = listaPuntos[i % n]
+            #Se verifica que se encuentre entre las coordenadas Y de los puntos  del edge
+            if min(y1, y2) < y <= max(y1, y2):
+                #Se verifica que X no se encuentre mas alla del eje
+                if x <= max(x1, x2):
+                    #Se calcula el intercepto en X
+                    if y1 != y2:
+                        interx = (y - y1) * (x2 - x1) / (y2 - y1) + x1
+                    #Si X se encuentra antes que el intercepto, se invierte "inside"
+                    if x1 == x2 or x <= interx:
+                        inside = not inside
+            #Se actualizan las variables para continuar el ciclo
+            x1, y1 = x2, y2
+        return inside
 
     def glLine(self, v0, v1, color):
         x0 = int(v0[0])
@@ -216,3 +172,7 @@ class Renderer(object):
                     y -= 1
                 limit += 1
 
+    def getPixelColor(self, x, y):
+        if 0 <= x < self.width and 0 <= y < self.height:
+            return self.frameBuffer[x][y]
+        return None
