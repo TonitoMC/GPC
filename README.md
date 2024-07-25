@@ -17,3 +17,6 @@ Para obtener la nota completa de ésta tarea deben entregar lo siguiente:
 El modelo debe ser cargado en el centro de la pantalla y debe ser completamente visible (no muy pequeño que no se distinga, y no muy grande que se salga de la pantalla).
 ### Resultado
 ![Dibujo del Modelo 3D ](/data/bitmap.bmp)
+### Render 3D original
+![Dibujo del Modelo 3D ](/data/chamber.png)
+Tomé un modelo 3D del arma de Chamber de Valorant y lo convertí a formato .obj utilizando un convertidor en línea.
