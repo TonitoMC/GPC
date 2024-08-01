@@ -38,7 +38,7 @@ modelo1.scale[0] = 0.3
 modelo1.scale[1] = 0.3
 modelo1.scale[2] = 0.3
 ```
-
+![Medium Shot](/renders/mediumshot.bmp)
 ### Low Angle
 Shot donde la cámara se encuentra más abajo del objeto viendo hacia arriba
 ```
@@ -50,6 +50,7 @@ modelo1.scale[2] = 0.3
 rend.camera.translate[1] -= 15
 rend.camera.rotate[0] += 45
 ```
+![Low Angle](/renders/lowangle.bmp)
 
 ### High Angle
 Shot donde la cámara se encuentra más arriba del objeto viendo hacia abajo
@@ -62,6 +63,7 @@ modelo1.scale[2] = 0.3
 rend.camera.translate[1] += 15
 rend.camera.rotate[0] -= 45
 ```
+![high Angle](/renders/highangle.bmp)
 
 ### Dutch Angle
 Shot dónde la cámara rota.
@@ -75,3 +77,5 @@ rend.camera.translate[1] += 15
 rend.camera.rotate[0] -= 20
 rend.camera.rotate[2] += 45
 ```
+![Dutch Angle](/renders/dutchangle.bmp)
+
