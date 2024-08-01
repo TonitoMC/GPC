@@ -1,6 +1,7 @@
 from math import cos, pi, sin
 import numpy as np
 
+
 # Clase matrix para manejar operaciones con matrices
 class Matrix:
     def __init__(self, data):
@@ -35,11 +36,58 @@ class Matrix:
         if isinstance(other, list):
             return self.vector_mul(other)
 
+    def identity(self):
+        size = len(self.data[0])
+        return [[1 if i == j else 0 for j in range(size)] for i in range(size)]
+
     def __repr__(self):
         return f"Matrix({self.data})"
 
+    def transpose(self):
+        mat = self.data
+        return [list(row) for row in zip(*mat)]
+    def getMinor(self, i, j):
+        mat = self.data
+        return [row[:j] + row[j + 1:] for row in (mat[:i] + mat[i + 1:])]
+
+    def determinant(self):
+        mat = self.data
+        if len(mat) == 2:
+            return mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0]
+
+        det = 0
+
+        for i in range(len(mat)):
+            det += ((-1) ** i) * mat[0][i] * Matrix(self.getMinor(0, i)).determinant()
+        return det
+
     def inverse(self):
-        return Matrix(np.linalg.inv(self.data).tolist())
+        mat = self.data
+        det = self.determinant()
+
+        n = len(mat)
+
+        if n == 2:
+            return Matrix([[mat[1][1] / det, -1 * mat[0][1] / det],
+                           [-1 * mat[1][0] / det, mat[0][0] / det]])
+
+        cofactors = []
+        for r in range(n):
+            cofactorRow = []
+            for c in range(n):
+                minor = Matrix(self.getMinor(r, c))
+                cofactorRow.append(((-1) ** (r + c)) * minor.determinant())
+            cofactors.append(cofactorRow)
+
+        cofactorMatrix = Matrix(cofactors)
+        cofactors_transposed = cofactorMatrix.transpose()
+
+        inverse_matrix = []
+        for r in range(n):
+            row = [value / det for value in cofactors_transposed[r]]
+            inverse_matrix.append(row)
+
+        return Matrix(inverse_matrix)
 
 
 def TranslationMatrix(x, y, z):
