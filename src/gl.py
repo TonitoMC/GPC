@@ -26,7 +26,6 @@ TRIANGLES = 2
 
 class Renderer(object):
     def __init__(self, screen):
-        self.vpX = None
         self.projectionMatrix = None
         self.screen = screen
         # No se toman las primeras dos, el screen.get_rect nos da las posiciones de origen y unicamente queremos
@@ -42,10 +41,32 @@ class Renderer(object):
         self.glClearColor(0, 0, 0)
         self.glClear()
 
-        self.primitiveType = LINES
+        self.primitiveType = POINTS
 
         self.vertexShader = None
         self.models = []
+
+    def glViewport(self, x, y, width, height):
+        self.vpX = int(x)
+        self.vpY = int(y)
+        self.vpWidth = width
+        self.vpHeight = height
+
+        self.viewportMatrix = Matrix([[width / 2, 0, 0, x + width / 2],
+                                      [0, height / 2, 0, y + height / 2],
+                                      [0, 0, 0.5, 0.5],
+                                      [0, 0, 0, 1]])
+
+    def glProjection(self, n=0.1, f=1000, fov=60):
+        aspectRatio = self.vpWidth / self.vpHeight
+        fov *= pi / 180
+        t = tan(fov / 2) * n
+        r = t * aspectRatio
+
+        self.projectionMatrix = Matrix([[n / r, 0, 0, 0],
+                                        [0, n / t, 0, 0],
+                                        [0, 0, -(f + n) / (f - n), -(2 * f * n) / (f - n)],
+                                        [0, 0, -1, 0]])
 
     def glGenerateFrameBuffer(self, filename):
         with open(filename, "wb") as file:
@@ -223,11 +244,11 @@ class Renderer(object):
                 print(self.count)
                 self.count += 1
                 if self.vertexShader:
-                    v0 = self.vertexShader(v0, modelMatrix=mMat, viewMatrix=self.camera.GetViewMatrix())
-                    v1 = self.vertexShader(v1, modelMatrix=mMat, viewMatrix=self.camera.GetViewMatrix())
-                    v2 = self.vertexShader(v2, modelMatrix=mMat, viewMatrix=self.camera.GetViewMatrix())
+                    v0 = self.vertexShader(v0, modelMatrix=mMat, viewMatrix=self.camera.GetViewMatrix(), projectionMatrix = self.projectionMatrix, viewportMatrix = self.viewportMatrix)
+                    v1 = self.vertexShader(v1, modelMatrix=mMat, viewMatrix=self.camera.GetViewMatrix(), projectionMatrix = self.projectionMatrix, viewportMatrix = self.viewportMatrix)
+                    v2 = self.vertexShader(v2, modelMatrix=mMat, viewMatrix=self.camera.GetViewMatrix(), projectionMatrix = self.projectionMatrix, viewportMatrix = self.viewportMatrix)
                     if vertCount == 4:
-                        v3 = self.vertexShader(v3, modelMatrix=mMat, viewMatrix=self.camera.GetViewMatrix())
+                        v3 = self.vertexShader(v3, modelMatrix=mMat, viewMatrix=self.camera.GetViewMatrix(), projectionMatrix = self.projectionMatrix, viewportMatrix = self.viewportMatrix)
 
                 vertexBuffer.append(v0)
                 vertexBuffer.append(v1)
@@ -238,29 +259,6 @@ class Renderer(object):
                     vertexBuffer.append(v3)
 
             self.glDrawPrimitives(vertexBuffer)
-
-    def glViewport(self, x, y, width, height):
-        self.vpX = int(x)
-        self.vpY = int(y)
-        self.vpWidth = width
-        self.vpHeight = height
-
-        self.viewportMatrix = Matrix([[width / 2, 0, 0, x + width / 2],
-                                      [0, height / 2, 0, y + height / 2],
-                                      [0, 0, 0.5, 0.5],
-                                      [0, 0, 0, 1]])
-
-    def glProjection(self, n=0.1, f=1000, fov=60):
-        aspectRatio = self.vpWidth / self.vpHeight
-        fov *= pi / 180
-        print(fov)
-        t = tan(fov / 2) * n
-        r = t * aspectRatio
-
-        self.projectionMatrix = Matrix([[n / r, 0, 0, 0],
-                                        [0, n / t, 0, 0],
-                                        [0, 0, -(f + n) / (f - n), -(2 * f * n) / (f - n)],
-                                        [0, 0, -1, 0]])
 
     def glDrawPrimitives(self, buffer):
         if self.primitiveType == POINTS:

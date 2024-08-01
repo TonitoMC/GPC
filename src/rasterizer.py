@@ -22,12 +22,10 @@ rend = Renderer(screen)
 rend.vertexShader = vertexShader
 
 modelo1 = Model("../data/face.obj")
-modelo1.translate[0] = width / 2
-modelo1.translate[1] = (height / 2)
-
-modelo1.scale[0] = 10
-modelo1.scale[1] = 10
-modelo1.scale[2] = 10
+modelo1.translate[2] = -10
+modelo1.scale[0] = 0.1
+modelo1.scale[1] = 0.1
+modelo1.scale[2] = 0.1
 #modelo1.rotate[0] = -90
 
 rend.models.append(modelo1)
@@ -41,13 +39,13 @@ while isRunning:
                 isRunning = False
 
             elif event.key == pygame.K_RIGHT:
-                rend.camera.translate[0] += 10
+                rend.camera.translate[0] += 1
             elif event.key == pygame.K_LEFT:
-                rend.camera.translate[0] -= 10
+                rend.camera.translate[0] -= 1
             elif event.key == pygame.K_UP:
-                rend.camera.translate[1] += 10
+                rend.camera.translate[1] += 1
             elif event.key == pygame.K_DOWN:
-                rend.camera.translate[1] -= 10
+                rend.camera.translate[1] -= 1
             elif event.key == pygame.K_l:
                 modelo1.rotate[2] += 10
             elif event.key == pygame.K_k:
