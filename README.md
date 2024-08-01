@@ -30,9 +30,48 @@ El modelo debe ser cargado en el centro de la pantalla y debe ser completamente 
 Nota: Utilice uno de los renders de clase, el que había utilizado en la entrega anterior estaba raro porque lo había convertido a un archivo obj desde otro formato y no se podría apreciar bien a perspectiva. No especificaba en las instrucciones si se podía utilizar alguno de clase así que decidí hacerlo.
 
 ### Medium Shot
+Shot donde la cámara se encuentra directamente al frente del objeto
+```
+modelo1.translate[1] -= 4.5
+modelo1.translate[2] = -20
+modelo1.scale[0] = 0.3
+modelo1.scale[1] = 0.3
+modelo1.scale[2] = 0.3
+```
 
 ### Low Angle
+Shot donde la cámara se encuentra más abajo del objeto viendo hacia arriba
+```
+modelo1.translate[1] -= 2
+modelo1.translate[2] = -20
+modelo1.scale[0] = 0.3
+modelo1.scale[1] = 0.3
+modelo1.scale[2] = 0.3
+rend.camera.translate[1] -= 15
+rend.camera.rotate[0] += 45
+```
 
 ### High Angle
+Shot donde la cámara se encuentra más arriba del objeto viendo hacia abajo
+```
+modelo1.translate[1] -= 2
+modelo1.translate[2] = -20
+modelo1.scale[0] = 0.3
+modelo1.scale[1] = 0.3
+modelo1.scale[2] = 0.3
+rend.camera.translate[1] += 15
+rend.camera.rotate[0] -= 45
+```
 
 ### Dutch Angle
+Shot dónde la cámara rota.
+```
+modelo1.translate[1] += 5
+modelo1.translate[2] = -20
+modelo1.scale[0] = 0.3
+modelo1.scale[1] = 0.3
+modelo1.scale[2] = 0.3
+rend.camera.translate[1] += 15
+rend.camera.rotate[0] -= 20
+rend.camera.rotate[2] += 45
+```
