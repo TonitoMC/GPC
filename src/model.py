@@ -1,5 +1,6 @@
-from mathlib import RotateMatrix, ScaleMatrix, TranslationMatrix
+from src.mathlib import RotateMatrix, ScaleMatrix, TranslationMatrix
 from obj import Obj
+from src.mathlib import Matrix
 
 
 class Model(object):

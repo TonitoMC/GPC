@@ -3,6 +3,8 @@ from pygame.locals import *
 from gl import Renderer, LINES, POINTS
 from src.model import Model
 from src.shaders import vertexShader
+from src.mathlib import Matrix
+
 
 # Variables de dimensiones de la pantalla
 width = 960
@@ -19,14 +21,14 @@ isRunning = True
 rend = Renderer(screen)
 rend.vertexShader = vertexShader
 
-modelo1 = Model("../data/chamber.obj")
-modelo1.translate[0] = width / 2 - 200
-modelo1.translate[1] = (height / 2) - 50
+modelo1 = Model("../data/face.obj")
+modelo1.translate[0] = width / 2
+modelo1.translate[1] = (height / 2)
 
-modelo1.scale[0] = 1500
-modelo1.scale[1] = 1500
-modelo1.scale[2] = 1500
-modelo1.rotate[0] = -90
+modelo1.scale[0] = 10
+modelo1.scale[1] = 10
+modelo1.scale[2] = 10
+#modelo1.rotate[0] = -90
 
 rend.models.append(modelo1)
 
@@ -39,13 +41,13 @@ while isRunning:
                 isRunning = False
 
             elif event.key == pygame.K_RIGHT:
-                modelo1.rotate[1] += 10
+                rend.camera.translate[0] += 10
             elif event.key == pygame.K_LEFT:
-                modelo1.rotate[1] -= 10
+                rend.camera.translate[0] -= 10
             elif event.key == pygame.K_UP:
-                modelo1.rotate[0] += 10
+                rend.camera.translate[1] += 10
             elif event.key == pygame.K_DOWN:
-                modelo1.rotate[0] -= 10
+                rend.camera.translate[1] -= 10
             elif event.key == pygame.K_l:
                 modelo1.rotate[2] += 10
             elif event.key == pygame.K_k:

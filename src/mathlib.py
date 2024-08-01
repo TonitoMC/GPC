@@ -1,5 +1,5 @@
 from math import cos, pi, sin
-
+import numpy as np
 
 # Clase matrix para manejar operaciones con matrices
 class Matrix:
@@ -37,6 +37,9 @@ class Matrix:
 
     def __repr__(self):
         return f"Matrix({self.data})"
+
+    def inverse(self):
+        return Matrix(np.linalg.inv(self.data).tolist())
 
 
 def TranslationMatrix(x, y, z):

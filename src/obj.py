@@ -40,5 +40,5 @@ class Obj(object):
                     vert = list(map(int, vert.split("/")))
                     face.append(vert)
                 self.faces.append(face)
-
+            print(f"veritecLlll {len(self.vertices)}")
             # self.faces.append([list(map(int, vert.split("/"))) for vert in value.split(" ")])

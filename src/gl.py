@@ -1,4 +1,7 @@
 import struct
+from camera import Camera
+from src.mathlib import Matrix
+from math import tan, pi
 
 
 def char(c):
@@ -23,9 +26,17 @@ TRIANGLES = 2
 
 class Renderer(object):
     def __init__(self, screen):
+        self.vpX = None
+        self.projectionMatrix = None
         self.screen = screen
-        # No se toman las primeras dos, el screen.get_rect nos da las posiciones de origen y unicamente queremos width + height
+        # No se toman las primeras dos, el screen.get_rect nos da las posiciones de origen y unicamente queremos
+        # width + height
         _, _, self.width, self.height = screen.get_rect()
+        self.count = 0
+
+        self.camera = Camera()
+        self.glViewport(0, 0, self.width, self.height)
+        self.glProjection()
 
         self.glColor(1, 1, 1)
         self.glClearColor(0, 0, 0)
@@ -206,13 +217,17 @@ class Renderer(object):
                 v2 = model.vertices[face[2][0] - 1]
                 if vertCount == 4:
                     v3 = model.vertices[face[3][0] - 1]
-
+                print(self.projectionMatrix)
+                print(self.viewportMatrix)
+                print(self.camera.GetViewMatrix())
+                print(self.count)
+                self.count += 1
                 if self.vertexShader:
-                    v0 = self.vertexShader(v0, modelMatrix=mMat)
-                    v1 = self.vertexShader(v1, modelMatrix=mMat)
-                    v2 = self.vertexShader(v2, modelMatrix=mMat)
+                    v0 = self.vertexShader(v0, modelMatrix=mMat, viewMatrix=self.camera.GetViewMatrix())
+                    v1 = self.vertexShader(v1, modelMatrix=mMat, viewMatrix=self.camera.GetViewMatrix())
+                    v2 = self.vertexShader(v2, modelMatrix=mMat, viewMatrix=self.camera.GetViewMatrix())
                     if vertCount == 4:
-                        v3 = self.vertexShader(v3, modelMatrix=mMat)
+                        v3 = self.vertexShader(v3, modelMatrix=mMat, viewMatrix=self.camera.GetViewMatrix())
 
                 vertexBuffer.append(v0)
                 vertexBuffer.append(v1)
@@ -224,9 +239,33 @@ class Renderer(object):
 
             self.glDrawPrimitives(vertexBuffer)
 
+    def glViewport(self, x, y, width, height):
+        self.vpX = int(x)
+        self.vpY = int(y)
+        self.vpWidth = width
+        self.vpHeight = height
+
+        self.viewportMatrix = Matrix([[width / 2, 0, 0, x + width / 2],
+                                      [0, height / 2, 0, y + height / 2],
+                                      [0, 0, 0.5, 0.5],
+                                      [0, 0, 0, 1]])
+
+    def glProjection(self, n=0.1, f=1000, fov=60):
+        aspectRatio = self.vpWidth / self.vpHeight
+        fov *= pi / 180
+        print(fov)
+        t = tan(fov / 2) * n
+        r = t * aspectRatio
+
+        self.projectionMatrix = Matrix([[n / r, 0, 0, 0],
+                                        [0, n / t, 0, 0],
+                                        [0, 0, -(f + n) / (f - n), -(2 * f * n) / (f - n)],
+                                        [0, 0, -1, 0]])
+
     def glDrawPrimitives(self, buffer):
         if self.primitiveType == POINTS:
             for point in buffer:
+                print(point)
                 self.glPoint(int(point[0]), int(point[1]))
 
         elif self.primitiveType == LINES:
