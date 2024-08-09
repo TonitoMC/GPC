@@ -265,9 +265,20 @@ class Renderer(object):
 
 			# Mandamos el buffer de vertices de este modelo a ser dibujado
 			self.glDrawPrimitives(vertexBuffer, 5)
-				
 
 	def glTriangle(self, A, B, C):
+		minX = round(min(A[0], B[0], C[0]))
+		minY = round(min(A[1], B[1], C[1]))
+		maxX = round(max(A[0], B[0], C[0]))
+		maxY = round(max(A[1], B[1], C[1]))
+
+		for x in range(minX, maxX + 1):
+			for y in range(minY, maxY + 1):
+				P = [x,y]
+				if barycentricCoords(A, B, C, P) != None:
+					self.glDrawTrianglePoint(A, B, C, P)
+
+	def glTriangle_std(self, A, B, C):
 		
 		# Hay que asegurar que los vertices entran
 		# en orden: Ay > By > Cy
