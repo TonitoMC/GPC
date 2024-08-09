@@ -1,7 +1,7 @@
 import struct
 from camera import Camera
-from mathlib import Matrix
-from math import tan, pi
+from mathlib import Matrix, barycentricCoords
+from math import tan, pi, isclose
 
 
 def char(c):
