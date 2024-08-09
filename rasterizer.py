@@ -20,6 +20,7 @@ rend.fragmentShader = fragmentShader
 modelo1 = Model("models/razenade.obj")
 modelo1.LoadTexture("textures/razenade.bmp")
 modelo1.translate[2] = -5
+modelo1.rotate[1] = 180
 modelo1.scale = [20,20,20]
 rend.models.append(modelo1)
 
