@@ -43,7 +43,7 @@ def toonShaderBWWithStatic(**kwargs):
     
     intensity = dot_product(normal, [-x for x in dirLight] )
     intensity = max(0, intensity)
-    
+    # Toon shading
     if intensity < 0.33:
         intensity = 0.3
     elif intensity < 0.66:
@@ -55,15 +55,17 @@ def toonShaderBWWithStatic(**kwargs):
     g *= intensity
     b *= intensity
 
+    # Se pasa a blanco y negro
     grayscale = (r + g + b) / 3
 
+    # Agrega ruido y estatica
     staticStrength = 0.05
     noise = (random.random() - 0.5) * staticStrength
     dotProbability = 0.05 
     if random.random() < dotProbability:
         grayscale = 0.2 
     grayscale += noise
-    grayscale = np.clip(grayscale, 0, 1) 
+    grayscale = min(1,max(0,grayscale))
     
     return [grayscale, grayscale, grayscale]
 
@@ -88,7 +90,7 @@ def noiseShader(**kwargs):
     vtP = [u * vtA[0] + v * vtB[0] + w * vtC[0],
            u * vtA[1] + v * vtB[1] + w * vtC[1]]
 
-
+    # Crea ruido con los parametros y perturba las coordenadas de textura
     frequency = 15
     amplitude = 0.025
 
@@ -100,7 +102,7 @@ def noiseShader(**kwargs):
     noise_value = noise.pnoise2(perturbed_vtP[0] * frequency, perturbed_vtP[1] * frequency)
 
     noise_value = (noise_value + 1) / 2
-
+    # Aplica ruido a los colores
     if texture:
         texColor = texture.getColor(perturbed_vtP[0], perturbed_vtP[1])
         r *= texColor[0]
@@ -140,6 +142,7 @@ def pixelShader(**kwargs):
     vtP = [u * vtA[0] + v * vtB[0] + w * vtC[0],
            u * vtA[1] + v * vtB[1] + w * vtC[1]]
 
+    # Fuerza a que las coordenadas de textura sean multiplos de pixelSize
     vtP[0] = (vtP[0] // pixelSize) * pixelSize
     vtP[1] = (vtP[1] // pixelSize) * pixelSize
     r = 1
