@@ -1,5 +1,5 @@
-# R3: Textures
-## Autor: José Mérida | 8 de Agosto 2024
+# Laboratorio 2: Shaders
+## Autor: José Mérida | 14 de Agosto 2024
 
 ## Ubicación de Archivos:
 - **Models:** Los archivos de los modelos utilizados dentro del programa
@@ -21,5 +21,5 @@ El modelo debe ser cargado en el centro de la pantalla y debe ser completamente 
 ## Resultados
 El output del archivo razenade.obj texturizado utilizando razenade.bmp
 
-![Render](/renders/output.bmp)
+![Render](/renders/output.bmp)s
 
