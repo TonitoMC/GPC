@@ -29,7 +29,28 @@ Toma un parámetro pixelSize, encuentra las coordenadas y luego fuerza un interv
 Esto fuerza a que todos los pixeles en cierto rango de coordenadas tomen el mismo color de la textura
 
 ### Noise Shader:
+Este shader le agrega "ruido" a la textura del objeto, de utiliza de dos maneras. Primero, perturba las coordenadas de textura
+``` Python
+    frequency = 15
+    amplitude = 0.025
 
+    perturbed_vtP = [
+        vtP[0] + noise.pnoise2(vtP[0] * frequency, vtP[1] * frequency) * amplitude,
+        vtP[1] + noise.pnoise2(vtP[1] * frequency, vtP[0] * frequency) * amplitude
+    ]
+```
+Luego, perturba los valores RGB para 'sobreponerle' ligeramente el ruido generado.
+```
+    if texture:
+        texColor = texture.getColor(perturbed_vtP[0], perturbed_vtP[1])
+        r *= texColor[0]
+        g *= texColor[1]
+        b *= texColor[2]
+
+    r *= noise_value ** 0.5
+    g *= noise_value ** 0.5
+    b *= noise_value ** 0.5
+```
 
 ### Blanco y Negro + Toon + Estática (Animado)
 Primero utiliza un Toon Shader y lo pasa a blanco y negro
