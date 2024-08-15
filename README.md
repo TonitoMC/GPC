@@ -11,9 +11,13 @@ El objetivo de este laboratorio, es que practiquen crear shaders interesantes ut
 Para éste lab, tienen que crear tres shaders diferentes y mostrar sus resultados usando su Rasterizador. La nota de los criterios subjetivos dependera de qué tan complejo e interesante sea el shader que implementen. Usen su creatividad y habilidades matemáticas/artísticas para crear sus shaders. Pueden agregar o implementar el uso de diferentes tipos de iluminación, texturas múltiples, argumentos del shader, etc.
 
 ## Resultados
-El output de la aplicación de los 3 shaders hechos para el Lab, el tercero está animado :)
+El output de la aplicación de los 3 shaders hechos para el Lab, este es el archivo BMP
 
 ![Render](/renders/output.bmp)
+
+GIF de los shaders para mostrar la animación (Se ve poquito pero la estática cambia)
+
+![GIF](https://github.com/user-attachments/assets/227194a7-1d57-4ad1-9559-c4b2953d592b)
 
 ## Shaders
 ### Pixel Shader:
