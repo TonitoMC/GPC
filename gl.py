@@ -413,7 +413,8 @@ class Renderer(object):
 			color = self.activeFragmentShader(verts = verts,
 										bCoords = bCoords,
 										texture = self.activeTexture,
-										dirLight = self.directionalLight
+										dirLight = self.directionalLight,
+										camPosition = self.camera.translate
 										)
 
 		self.glPoint(x, y, color)

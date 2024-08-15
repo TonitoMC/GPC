@@ -1,6 +1,10 @@
 from math import cos, pi, sin
 import numpy as np
 
+def dot_product(a,b):
+     if len(a) != len(b):
+         raise ValueError("Los vectores deben tener la misma longitud")
+     return sum(x*y for x,y in zip(a,b))
 
 # Clase matrix para manejar operaciones con matrices
 class Matrix:
