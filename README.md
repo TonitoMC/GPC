@@ -18,7 +18,7 @@ El output / render final del proyecto
 ![Render](/renders/output.bmp)
 
 ## Shaders / Modelos
-Torreta de Killjoy - Shader Blanco y Negro + Toon Lighting + Estatica
+Torreta de Killjoy - Shader Blanco y Negro + Toon Lighting + Estatica (Animado)
 
 ![image](https://github.com/user-attachments/assets/b83d93ed-c261-4481-a121-6062c104e20d)
 

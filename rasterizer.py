@@ -74,7 +74,7 @@ keychain.rotate[2] += 170 # Stand straight
 keychain.scale = [30,30,30]
 rend.models.append(keychain)
 
-rend.primitiveType = LINES
+rend.primitiveType = TRIANGLES
 
 isRunning = True
 while isRunning:
