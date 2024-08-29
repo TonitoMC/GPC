@@ -4,6 +4,7 @@ import math
 import noise
 import random
 from mathlib import *
+from texture import Texture
 
 #Shaders del Lab
 
@@ -138,7 +139,7 @@ def pixelShader(**kwargs):
     nB = [B[5], B[6], B[7]]
     nC = [C[5], C[6], C[7]]
     
-    pixelSize = 0.02
+    pixelSize = 0.01
     vtP = [u * vtA[0] + v * vtB[0] + w * vtC[0],
            u * vtA[1] + v * vtB[1] + w * vtC[1]]
 
@@ -156,6 +157,47 @@ def pixelShader(**kwargs):
         b *= texColor[2]
     
     return [r, g, b]
+
+def onFireShader(**kwargs):
+    A, B, C = kwargs["verts"]
+    u, v, w = kwargs["bCoords"]
+    texture = kwargs["texture"]
+    onFireTexture = kwargs["onFireTexture"]
+
+    # Interpolating texture coordinates
+    vtA = [A[3], A[4]]
+    vtB = [B[3], B[4]]
+    vtC = [C[3], C[4]]
+
+    vtP = [
+        u * vtA[0] + v * vtB[0] + w * vtC[0],
+        u * vtA[1] + v * vtB[1] + w * vtC[1]
+    ]
+
+    # Calculate the color from the base texture
+    if texture:
+        baseColor = texture.getColor(vtP[0], vtP[1])
+        r, g, b = baseColor[0], baseColor[1], baseColor[2]
+    else:
+        r, g, b = 1, 1, 1
+
+    # Calculate the color from the "on fire" texture
+    if onFireTexture:
+        fireColor = onFireTexture.getColor(vtP[0], vtP[1])
+        r2, g2, b2 = fireColor[0], fireColor[1], fireColor[2]
+    else:
+        r2, g2, b2 = 1, 1, 1
+
+    # Blend the base texture with the "on fire" texture
+    blendFactor = 0.5  # Adjust this to control the blending
+    finalColor = [
+        blendFactor * r + (1 - blendFactor) * r2,
+        blendFactor * g + (1 - blendFactor) * g2,
+        blendFactor * b + (1 - blendFactor) * b2
+    ]
+
+    return [min(1, finalColor[0]), min(1, finalColor[1]), min(1, finalColor[2])]
+
 
 
 # Shaders de Clase

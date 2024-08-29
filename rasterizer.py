@@ -22,7 +22,7 @@ rend.glLoadBackground("textures/test.bmp")
 razenade = Model("models/razenade.obj")
 razenade.LoadTexture("textures/razenade.bmp")
 razenade.vertexShader = vertexShader
-razenade.fragmentShader = pixelShader
+razenade.fragmentShader = onFireShader
 razenade.translate[0] = 5
 razenade.translate[1] = 2
 razenade.translate[2] = -6.5
@@ -60,19 +60,19 @@ reaver.rotate[2] += 90 # Make it fully horizontal
 reaver.scale = [4.75,4.75,4.75]
 rend.models.append(reaver)
 
-#TODO Fix reaver, looks weird
-modelo3 = Model("models/keychain.obj")
-modelo3.LoadTexture("textures/keychain.bmp")
-modelo3.vertexShader = vertexShader
-modelo3.fragmentShader = fragmentShader
-modelo3.translate[0] = -2
-modelo3.translate[1] = -2.1
-modelo3.translate[2] = 4
-modelo3.rotate[0] += 0 # Rotate to match surface
-modelo3.rotate[1] -= 90 #Turn to camera
-modelo3.rotate[2] += 170 # Stand straight
-modelo3.scale = [30,30,30]
-rend.models.append(modelo3)
+#
+keychain = Model("models/keychain.obj")
+keychain.LoadTexture("textures/keychain.bmp")
+keychain.vertexShader = vertexShader
+keychain.fragmentShader = pixelShader
+keychain.translate[0] = -2
+keychain.translate[1] = -2.1
+keychain.translate[2] = 4
+keychain.rotate[0] += 0 # Rotate to match surface
+keychain.rotate[1] -= 90 #Turn to camera
+keychain.rotate[2] += 170 # Stand straight
+keychain.scale = [30,30,30]
+rend.models.append(keychain)
 
 rend.primitiveType = LINES
 
