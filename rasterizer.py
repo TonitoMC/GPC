@@ -18,27 +18,6 @@ rend.fragmentShader = fragmentShader
 rend.glLoadBackground("textures/test.bmp")
 
 
-# modelo1 = Model("models/Melee_Reaver.obj")
-# modelo1.LoadTexture("textures/Melee_Reaver.bmp")
-# modelo1.vertexShader = vertexShader
-# modelo1.fragmentShader = toonShaderBWWithStatic
-# modelo1.translate[0] = -1
-# modelo1.translate[1] = -0.6
-# modelo1.translate[2] = 2
-# modelo1.scale = [3.5,3.5,3.5]
-# rend.models.append(modelo1)
-
-# modelo2 = Model("models/Melee_Reaver.obj")
-# modelo2.LoadTexture("textures/Melee_Reaver.bmp")
-# modelo2.vertexShader = vertexShader
-# modelo2.fragmentShader = noiseShader
-# modelo2.translate[0] = 3
-# modelo2.translate[1] = -0.6
-# modelo2.translate[2] = 5
-# modelo2.rotate[0] = 90
-# modelo2.scale = [3.5,3.5,3.5]
-# rend.models.append(modelo2)
-
 #Razenade
 razenade = Model("models/razenade.obj")
 razenade.LoadTexture("textures/razenade.bmp")
@@ -67,32 +46,32 @@ kjturret.rotate[2] = -5
 kjturret.scale = [1.5,1.5,1.5]
 rend.models.append(kjturret)
 
-# # Omen
-# omen = Model("models/gekkosimple.obj")
-# omen.LoadTexture("textures/omen.bmp")
-# omen.vertexShader = vertexShader
-# omen.fragmentShader = pixelShader
-# omen.translate[0] = 0
-# omen.translate[1] = 0
-# omen.translate[2] = -15
-# omen.rotate[0] = 0
-# omen.rotate[1] = 0
-# omen.rotate[2] = 0
-# omen.scale = [1.5,1.5,1.5]
-# rend.models.append(omen)
+
+reaver = Model("models/Melee_Reaver.obj")
+reaver.LoadTexture("textures/Melee_Reaver.bmp")
+reaver.vertexShader = vertexShader
+reaver.fragmentShader = noiseShader
+reaver.translate[0] = 3.75
+reaver.translate[1] = 0.75
+reaver.translate[2] = 4.5
+reaver.rotate[0] += 40 # Rotate to match surface
+reaver.rotate[1] += 20 #make it turn away from me
+reaver.rotate[2] += 90 # Make it fully horizontal
+reaver.scale = [4.75,4.75,4.75]
+rend.models.append(reaver)
 
 #TODO Fix reaver, looks weird
-modelo3 = Model("models/Melee_Reaver.obj")
-modelo3.LoadTexture("textures/Melee_Reaver.bmp")
+modelo3 = Model("models/keychain.obj")
+modelo3.LoadTexture("textures/keychain.bmp")
 modelo3.vertexShader = vertexShader
-modelo3.fragmentShader = noiseShader
-modelo3.translate[0] = 3.75
-modelo3.translate[1] = 0.75
-modelo3.translate[2] = 4.5
-modelo3.rotate[0] += 35 # Rotate to match surface
-modelo3.rotate[1] += 22.5 #make it turn away from me
-modelo3.rotate[2] += 90 # Make it fully horizontal
-modelo3.scale = [4.75,4.75,4.75]
+modelo3.fragmentShader = fragmentShader
+modelo3.translate[0] = -2
+modelo3.translate[1] = -2.1
+modelo3.translate[2] = 4
+modelo3.rotate[0] += 0 # Rotate to match surface
+modelo3.rotate[1] -= 90 #Turn to camera
+modelo3.rotate[2] += 170 # Stand straight
+modelo3.scale = [30,30,30]
 rend.models.append(modelo3)
 
 rend.primitiveType = LINES
