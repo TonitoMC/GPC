@@ -23,6 +23,7 @@ class Model(object):
 		self.vertexShader = None
 		self.fragmentShader = None
 
+
 	def LoadTexture(self, filename):
 		self.texture = Texture(filename)
 

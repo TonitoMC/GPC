@@ -28,6 +28,7 @@ class Renderer(object):
 		self.screen = screen
 		_, _, self.width, self.height = screen.get_rect()
 		
+		self.onFireTexture = Texture("textures/onfire.bmp")
 		self.camera = Camera()
 		self.glViewport(0,0, self.width, self.height)
 		self.glProjection()
@@ -41,7 +42,7 @@ class Renderer(object):
 
 		self.activeTexture = None
 
-		self.directionalLight = [1,0,0]
+		self.directionalLight = [0,-1,0]
 		
 		self.primitiveType = TRIANGLES
 		
@@ -433,7 +434,8 @@ class Renderer(object):
 										bCoords = bCoords,
 										texture = self.activeTexture,
 										dirLight = self.directionalLight,
-										camPosition = self.camera.translate
+										camPosition = self.camera.translate,
+										onFireTexture = self.onFireTexture
 										)
 
 		self.glPoint(x, y, color)
