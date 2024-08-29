@@ -174,22 +174,22 @@ def onFireShader(**kwargs):
         u * vtA[1] + v * vtB[1] + w * vtC[1]
     ]
 
-    # Calculate the color from the base texture
+    # Calculo de color de la textura base
     if texture:
         baseColor = texture.getColor(vtP[0], vtP[1])
         r, g, b = baseColor[0], baseColor[1], baseColor[2]
     else:
         r, g, b = 1, 1, 1
 
-    # Calculate the color from the "on fire" texture
+    # Calculate de color de textura de fuegho
     if onFireTexture:
         fireColor = onFireTexture.getColor(vtP[0], vtP[1])
         r2, g2, b2 = fireColor[0], fireColor[1], fireColor[2]
     else:
         r2, g2, b2 = 1, 1, 1
 
-    # Blend the base texture with the "on fire" texture
-    blendFactor = 0.5  # Adjust this to control the blending
+    # Blend
+    blendFactor = 0.5 
     finalColor = [
         blendFactor * r + (1 - blendFactor) * r2,
         blendFactor * g + (1 - blendFactor) * g2,
