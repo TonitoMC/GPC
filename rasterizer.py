@@ -81,16 +81,19 @@ rend.models.append(kjturret)
 # omen.scale = [1.5,1.5,1.5]
 # rend.models.append(omen)
 
-# TODO Reaver
-# modelo3 = Model("models/Melee_Reaver.obj")
-# modelo3.LoadTexture("textures/Melee_Reaver.bmp")
-# modelo3.vertexShader = vertexShader
-# modelo3.fragmentShader = pixelShader
-# modelo3.translate[0] = 1
-# modelo3.translate[1] = -0.6
-# modelo3.translate[2] = 2
-# modelo3.scale = [3.5,3.5,3.5]
-# rend.models.append(modelo3)
+#TODO Fix reaver, looks weird
+modelo3 = Model("models/Melee_Reaver.obj")
+modelo3.LoadTexture("textures/Melee_Reaver.bmp")
+modelo3.vertexShader = vertexShader
+modelo3.fragmentShader = noiseShader
+modelo3.translate[0] = 3.75
+modelo3.translate[1] = 0.75
+modelo3.translate[2] = 4.5
+modelo3.rotate[0] += 35 # Rotate to match surface
+modelo3.rotate[1] += 22.5 #make it turn away from me
+modelo3.rotate[2] += 90 # Make it fully horizontal
+modelo3.scale = [4.75,4.75,4.75]
+rend.models.append(modelo3)
 
 rend.primitiveType = LINES
 
