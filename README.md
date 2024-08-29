@@ -19,7 +19,19 @@ El output / render final del proyecto
 
 ## Shaders / Modelos
 Torreta de Killjoy - Shader Blanco y Negro + Toon Lighting + Estatica
+
 ![image](https://github.com/user-attachments/assets/b83d93ed-c261-4481-a121-6062c104e20d)
 
 Cuchilla Reaver - Noise Shader (Distorsiona textura y sobrepone ruido 2D)
+
 ![image](https://github.com/user-attachments/assets/e81b9375-d4c2-45e8-9bdd-254ecd0c013d)
+
+Modelo Chibi Raze - Pixel Shader
+
+![image](https://github.com/user-attachments/assets/5ca9e28e-3a49-47aa-8701-0652c068796a)
+
+Nota: La parte de la textura que es solida de un lado es parte del modelo, no pude encontrar agentes normales en obj y como es un llavero no se colorea ahi :c
+
+Modelo Granada de Raze - On Fire Shader, utiliza un blend de texturas
+
+![image](https://github.com/user-attachments/assets/970f7209-eccc-44c6-8cc7-ae904d6fbb29)
