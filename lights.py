@@ -17,6 +17,7 @@ class AmbientLight(Light):
         super().__init__(color, intensity, "Ambient")
     def GetSpecularColor(self, intercept, viewPos):
         return [0,0,0]
+
 class DirectionalLight(Light):
     def __init__(self, color = [1,1,1], intensity = 1.0, direction = [0, -1, 0]):
         super().__init__(color, intensity, "Directional")
@@ -33,7 +34,7 @@ class DirectionalLight(Light):
         return lightColor
     
     def GetSpecularColor(self, intercept, viewPos):
-        specColor = super().GetSpecularColor(intercept, viewPos)
+        specColor = self.color
 
         if intercept:
             dir = [(i * -1) for i in self.direction]
@@ -46,5 +47,5 @@ class DirectionalLight(Light):
             specularity *= intercept.obj.material.Ks
             specularity *= self.intensity
             specColor = [(i * specularity) for i in specColor]
-        print(specColor)
+
         return specColor
