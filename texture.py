@@ -1,3 +1,4 @@
+
 import struct
 
 class Texture(object):
@@ -27,7 +28,15 @@ class Texture(object):
 				self.pixels.append(pixelRow)
 
 	def getColor(self, u, v):
-		u = u % 1.0
-		v = v % 1.0
+		if 0 <= u < 1 and 0 <= v < 1:
+			return self.pixels[int(v * self.height)][int(u * self.width)]
+		else:
+			return None
 
-		return self.pixels[int(v * self.height)][int(u * self.width)]
+
+
+
+
+
+
+
