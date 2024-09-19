@@ -1,9 +1,9 @@
 import struct
 from camera import Camera
 from math import tan, pi
-import numpy as np
 import pygame
 import random
+from MathLib import *
 
 def char(c):
 	# 1 byte
@@ -167,7 +167,7 @@ class RendererRT(object):
 				pY *= self.topEdge
 					
 				dir = [pX, pY, -self.nearPlane]
-				dir /= np.linalg.norm(dir)
+				dir = [x / vec_norm(dir) for x in dir]
 
 				intercept = self.glCastRay(self.camera.translate, dir)
 					

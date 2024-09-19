@@ -1,4 +1,3 @@
-import numpy as np
 class Material(object):
     def __init__(self, diffuse, spec = 1.0, Ks = 0.0):
         self.diffuse = diffuse

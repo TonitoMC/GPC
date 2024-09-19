@@ -18,3 +18,22 @@ Para obtener la nota completa de ésta tarea deben entregar lo siguiente:
 El output / render final del proyecto
 
 ![Render](/renders/output.bmp)
+
+### Materiales Utilizados
+```
+# Nieve, no refleja mucha luz
+snow = Material(diffuse = [1,1,1], spec = 16, Ks = 0.08)
+
+# Zanahoria, refleja mucha luz por motivos demostrativos
+carrot = Material(diffuse = [1,0.5,0], spec = 64, Ks = 0.1)
+
+# Botones de carbon, poco especular
+charcoal = Material(diffuse = [0.2,0.2,0.2], spec = 16, Ks = 0.1)
+
+# Botones (de plastico? no he hecho un muñeco de nieve) reflejan bastante luz
+button = Material(diffuse = [0.2,0.2,0.2], spec = 128, Ks = 0.2)
+
+# Ojos que reflejan bastante
+eyewhite = Material(diffuse = [1,1,1], spec = 64, Ks = 0.2)
+eyeblack = Material(diffuse = [0.2,0.2,0.2], spec = 64, Ks = 0.2)
+```

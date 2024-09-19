@@ -27,7 +27,7 @@ class Model(object):
                                          self.translate[1],
                                          self.translate[2])
         
-        rotateMat = RotationMatrix(self.rotate[0],
+        rotateMat = RotateMatrix(self.rotate[0],
                                    self.rotate[1],
                                    self.rotate[2])
         

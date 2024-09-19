@@ -1,5 +1,4 @@
 from math import cos, pi, sin
-import numpy as np
 
 def dot_product(a,b):
      if len(a) != len(b):
@@ -8,7 +7,7 @@ def dot_product(a,b):
 
 def vec_mul(a, b):
     if len(a) != len(b):
-        raise ValueError("Both vectors must have the same length")
+        raise ValueError("Los vectores deben tener la misma longitud")
 
     result = []
 
@@ -16,18 +15,19 @@ def vec_mul(a, b):
         result.append(a[i] * b[i])
 
     return result
-
 def vec_sub(a, b):
     if len(a) != len(b):
         raise ValueError("Both vectors must have the same length")
+    return [a[i] - b[i] for i in range(len(a))]
 
-    # Initialize the result array
+def vec_sum(a, b):
+    if len(a) != len(b):
+        raise ValueError("Los vectores deben tener la misma longitud")
+
     result = []
 
-    # Iterate over the elements of the arrays
     for i in range(len(a)):
-        # Subtract corresponding elements and append to the result
-        result.append(a[i] - b[i])
+        result.append(a[i] + b[i])
 
     return result
 
@@ -203,11 +203,9 @@ def barycentricCoords(A, B, C, P):
 	else:
 		return None
 	
-# TODO no numpy
-
 def reflectVector(normal, direction):
 	reflect = 2 * dot_product(normal, direction)
-	reflect = vec_mul(reflect, normal)
+	reflect = [x * reflect for x in  normal]
 	reflect = vec_sub(reflect, direction)
 	reflect = [x / vec_norm(reflect) for x in reflect]
 	return reflect
