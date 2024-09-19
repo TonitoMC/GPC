@@ -7,27 +7,34 @@ from figures import *
 from material import Material
 from lights import *
 
-width = 512
-height = 512
+width = 256
+height = 256
 
 screen = pygame.display.set_mode((width, height), pygame.SCALED )
 clock = pygame.time.Clock()
 
 rt = RendererRT(screen)
 
-brick = Material(diffuse = [1,0.2,0.2], spec = 128, Ks = 0.25)
-grass = Material(diffuse = [0.2,1.0,0.2], spec = 128, Ks = 0.2)
-snow = Material(diffuse = [1,1,1], spec = 128, Ks = 0.25)
-carrot = Material(diffuse = [1,0.5,0], spec = 128, Ks = 0.25)
-charcoal = Material(diffuse = [0.2,0.2,0.2], spec = 128, Ks = 0.25)
-button = Material(diffuse = [0.2,0.2,0.2], spec = 128, Ks = 0.25)
-eyewhite = Material(diffuse = [1,1,1], spec = 128, Ks = 0.25)
-eyeblack = Material(diffuse = [0.2,0.2,0.2], spec = 128, Ks = 0.25)
+# Nieve, no refleja mucha luz
+snow = Material(diffuse = [1,1,1], spec = 16, Ks = 0.08)
+
+# Zanahoria, refleja mucha luz por motivos demostrativos
+carrot = Material(diffuse = [1,0.5,0], spec = 64, Ks = 0.1)
+
+# Botones de carbon, poco especular
+charcoal = Material(diffuse = [0.2,0.2,0.2], spec = 16, Ks = 0.1)
+
+# Botones (de plastico? no he hecho un muñeco de nieve) reflejan bastante luz
+button = Material(diffuse = [0.2,0.2,0.2], spec = 128, Ks = 0.2)
+
+# Ojos que reflejan bastante
+eyewhite = Material(diffuse = [1,1,1], spec = 64, Ks = 0.2)
+eyeblack = Material(diffuse = [0.2,0.2,0.2], spec = 64, Ks = 0.2)
 
 
-
+# Luz direccional y luz de ambiente
 rt.lights.append( DirectionalLight(direction = [-1,-1,-1]))
-rt.lights.append( AmbientLight(intensity = 0.1))
+rt.lights.append( AmbientLight(intensity = 0.2))
 
 # Bottom Snowball
 rt.scene.append( Sphere(position = [0,-1.5,-5], radius = 1, material = snow))
@@ -68,16 +75,18 @@ rt.scene.append( Sphere (position = (0.25, 0.9, -4.44), radius = 0.055, material
 rt.scene.append(Sphere(position = (0, 1.05, -4.5), radius = 0.2, material = carrot))
 # Left Eye
 # White
-rt.scene.append( Sphere (position = (0.25, 1.2, -4.4325), radius = 0.075, material = eyewhite))
+rt.scene.append( Sphere (position = (0.25, 1.2, -4.432), radius = 0.085, material = eyewhite))
 # Black
-rt.scene.append( Sphere (position = (0.25, 1.2, -4.4), radius = 0.05, material = eyeblack))
+rt.scene.append( Sphere (position = (0.25, 1.2, -4.375), radius = 0.05, material = eyeblack))
 
 
 # Right Eye
 # White
-rt.scene.append( Sphere (position = (-0.25, 1.2, -4.4325), radius = 0.075, material = eyewhite))
-# Black
-rt.scene.append( Sphere (position = (-0.25, 1.2, -4.4), radius = 0.05, material = eyeblack))
+rt.scene.append( Sphere (position = (-0.25, 1.2, -4.432), radius = 0.085, material = eyewhite))
+rt.scene.append( Sphere (position = (-0.25, 1.2, -4.375), radius = 0.05, material = eyeblack))
+
+brick = Material(diffuse = [1,0.2,0.2], spec = 128, Ks = 0.25)
+grass = Material(diffuse = [0.2,1.0,0.2], spec = 128, Ks = 0.2)
 
 
 rt.glRender()
@@ -92,6 +101,7 @@ while isRunning:
 		elif event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_ESCAPE:
 				isRunning = False
+				rt.glGenerateFrameBuffer('renders/output.bmp')
 				
 	pygame.display.flip()
 	clock.tick(60)
