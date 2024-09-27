@@ -7,8 +7,8 @@ from figures import *
 from material import *
 from lights import *
 from texture import *
-width = 400
-height = 225
+width = 800
+height = 450
 
 screen = pygame.display.set_mode((width, height), pygame.SCALED )
 clock = pygame.time.Clock()
@@ -29,14 +29,14 @@ glass = Material(spec = 128, Ks = 0.2, ior = 1.5, matType = TRANSPARENT)
 rt.lights.append( DirectionalLight(direction = [-1,-1,-1], intensity = 0.8))
 rt.lights.append( AmbientLight(intensity = 0.1))
 
-brick = Material(spec = 128, Ks = 0.25, matType = OPAQUE, texture = Texture("textures/brick2.bmp"))
-pavement = Material(spec = 128, Ks = 0.25, matType = OPAQUE, texture = Texture("textures/pavement.bmp"))
+brick = Material(spec = 16, Ks = 0.08, matType = OPAQUE, texture = Texture("textures/brick2.bmp"))
+pavement = Material(spec = 16, Ks = 0.1, matType = OPAQUE, texture = Texture("textures/pavement.bmp"))
 
 ice = Material(spec = 128, Ks = 0.2, matType = REFLECTIVE, texture = Texture("textures/ice.bmp"))
-marble = Material(spec = 128, Ks = 0.2, matType = REFLECTIVE, texture = Texture("textures/marble.bmp"))
+marble = Material(spec = 64, Ks = 0.25, matType = REFLECTIVE, texture = Texture("textures/marble.bmp"))
 
-water = Material(spec = 128, Ks = 0.2, ior = 1.5, matType = TRANSPARENT, texture = Texture("textures/watersimple.bmp"))
-shine = Material(spec = 128, Ks = 0.2, ior = 1.5, matType = TRANSPARENT, texture = Texture("textures/shine.bmp"))
+water = Material(spec = 64, Ks = 0.2, ior = 1.5, matType = TRANSPARENT, texture = Texture("textures/watersimple.bmp"))
+shine = Material(spec = 64, Ks = 0.2, ior = 1.5, matType = TRANSPARENT, texture = Texture("textures/shine.bmp"))
 
 
 # Opacas - Izquierda
