@@ -53,7 +53,7 @@ class Material(object):
 
         elif self.matType == TRANSPARENT:
             # Revisamos si estamos afuera
-            outside = np.dot(intercept.normal, intercept.rayDirection) < 0
+            outside = dot_product(intercept.normal, intercept.rayDirection) < 0
 
             # Agregamos margen de error
             bias = [i * 0.001 for i in intercept.normal]
@@ -61,7 +61,7 @@ class Material(object):
             # Generamos los rayos de refleccion
             rayDir = [-i for i in intercept.rayDirection]
             reflect = reflectVector(intercept.normal, rayDir)
-            reflectOrig = np.add(intercept.point, bias) if outside else np.subtract(intercept.point, bias)
+            reflectOrig = vec_sum(intercept.point, bias) if outside else vec_sub(intercept.point, bias)
             reflectIntercept = renderer.glCastRay(reflectOrig, reflect, None, recursion + 1)
             if reflectIntercept != None:
                 reflectColor = reflectIntercept.obj.material.GetSurfaceColor(reflectIntercept, renderer, recursion + 1)
@@ -72,7 +72,7 @@ class Material(object):
             # Generamos los rayos de refraccion
             if not totalInternalReflection(intercept.normal, intercept.rayDirection, 1.0, self.ior):
                 refract = refractVector(intercept.normal, intercept.rayDirection, 1.0, self.ior)
-                refractOrig = np.subtract(intercept.point, bias) if outside else np.add(intercept.point, bias)
+                refractOrig = vec_sub(intercept.point, bias) if outside else vec_sum(intercept.point, bias)
                 refractIntercept = renderer.glCastRay(refractOrig, refract, None, recursion + 1)
                 if refractIntercept != None:
                     refractColor = refractIntercept.obj.material.GetSurfaceColor(refractIntercept, renderer, recursion + 1)

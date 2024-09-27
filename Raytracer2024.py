@@ -35,21 +35,20 @@ pavement = Material(spec = 128, Ks = 0.25, matType = OPAQUE, texture = Texture("
 ice = Material(spec = 128, Ks = 0.2, matType = REFLECTIVE, texture = Texture("textures/ice.bmp"))
 marble = Material(spec = 128, Ks = 0.2, matType = REFLECTIVE, texture = Texture("textures/marble.bmp"))
 
-
 water = Material(spec = 128, Ks = 0.2, ior = 1.5, matType = TRANSPARENT, texture = Texture("textures/watersimple.bmp"))
-water = Material(spec = 128, Ks = 0.2, ior = 1.5, matType = TRANSPARENT, texture = Texture("textures/watersimple.bmp"))
+shine = Material(spec = 128, Ks = 0.2, ior = 1.5, matType = TRANSPARENT, texture = Texture("textures/shine.bmp"))
 
 
-# # Opacas - Izquierda
-# rt.scene.append( Sphere(position = [-2.5, -1.25, -5], radius = 1, material = brick))
-# rt.scene.append( Sphere(position = [-2.5, 1.25, -5], radius = 1, material = pavement))
+# Opacas - Izquierda
+rt.scene.append( Sphere(position = [-2.5, -1.25, -5], radius = 1, material = brick))
+rt.scene.append( Sphere(position = [-2.5, 1.25, -5], radius = 1, material = pavement))
 
 # Reflectivas - Centro
 rt.scene.append( Sphere(position = [0, -1.25, -5], radius = 1, material = ice))
 rt.scene.append( Sphere(position = [0, 1.25, -5], radius = 1, material = marble))
 
 # Refractivas - Derecha
-rt.scene.append( Sphere(position = [2.5, -1.25, -5], radius = 1, material = water))
+rt.scene.append( Sphere(position = [2.5, -1.25, -5], radius = 1, material = shine))
 rt.scene.append( Sphere(position = [2.5, 1.25, -5], radius = 1, material = water))
 
 # Dos adicionales para mostrar Refraccion / Refleccion
