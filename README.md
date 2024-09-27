@@ -1,21 +1,20 @@
-# RT1: Spheres, Materials & Phong Shading
+# RT2: Opaque, Reflective & Refractive Materials
 ## Autor: José Mérida | Septiembre 2024
 
 ## Ubicación de Archivos:
 - **Renders:** El output BMP del programa y cualquier otro render requerido para la entrega
+- **Textures:** Las texturas aplicadas a l as esferas
 ## Instrucciones
 Para obtener la nota completa de ésta tarea deben entregar lo siguiente:
 
-- Código fuente capaz de renderizar esferas por medio de un Ray Intersect Algorithm.
+- Código fuente capaz de renderizar esferas con distintos tipos de materiales.
   
-- Usar un modelo de iluminación Phong
+- Cargar una textura que sirva de Environment Map en la escena (diferente al usado en clase).
   
-- El programa principal debe mostrar la siguiente figura (o lo más cercano posible) en pantalla o en un BMP:
-
-![image](https://github.com/user-attachments/assets/8897aac4-3e79-4f5c-8b3e-b072e9ed4854)
+- El programa principal debe cargar y mostrar seis esferas diferentes de distintos colores y propiedades: 2 opacas, 2 reflectivas y 2 transparentes.
 
 ## Resultados
-El output / render final del proyecto
+El output / render final de la entrega
 
 ![Render](/renders/output.bmp)
 
