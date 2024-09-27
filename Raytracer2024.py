@@ -4,89 +4,47 @@ import pygame
 from pygame.locals import *
 from gl import RendererRT
 from figures import *
-from material import Material
+from material import *
 from lights import *
-
-width = 1024
-height = 1024
+from texture import *
+width = 800
+height = 450
 
 screen = pygame.display.set_mode((width, height), pygame.SCALED )
 clock = pygame.time.Clock()
 
 rt = RendererRT(screen)
-
-# Nieve, no refleja mucha luz
-snow = Material(diffuse = [1,1,1], spec = 16, Ks = 0.08)
-
-# Zanahoria, refleja mucha luz por motivos demostrativos
-carrot = Material(diffuse = [1,0.5,0], spec = 64, Ks = 0.1)
-
-# Botones de carbon, poco especular
-charcoal = Material(diffuse = [0.2,0.2,0.2], spec = 16, Ks = 0.1)
-
-# Botones (de plastico? no he hecho un muñeco de nieve) reflejan bastante luz
-button = Material(diffuse = [0.2,0.2,0.2], spec = 128, Ks = 0.2)
-
-# Ojos que reflejan bastante
-eyewhite = Material(diffuse = [1,1,1], spec = 64, Ks = 0.2)
-eyeblack = Material(diffuse = [0.2,0.2,0.2], spec = 64, Ks = 0.2)
+rt.envMap = Texture("textures/lot.bmp")
+rt.glClearColor(0.5,0.0,0.0)
+rt.glClear()
 
 
-# Luz direccional y luz de ambiente
-rt.lights.append( DirectionalLight(direction = [-1,-1,-1]))
-rt.lights.append( AmbientLight(intensity = 0.2))
+brick = Material(diffuse = [1.0,0.2,0.2], spec = 128, Ks = 0.25)
+grass = Material(diffuse = [0.2,1.0,0.2], spec = 64, Ks = 0.2)
 
-# Bottom Snowball
-rt.scene.append( Sphere(position = [0,-1.5,-5], radius = 1, material = snow))
+mirror = Material(diffuse = [0.9, 0.9, 0.9], spec = 128, Ks = 0.2, matType = REFLECTIVE)
+blueMirror = Material(diffuse = [0.5, 0.5, 1.0], spec = 128, Ks = 0.2, matType = REFLECTIVE)
+paint = Material(texture = Texture("textures/eee.bmp"))
+glass = Material(spec = 128, Ks = 0.2, ior = 1.5, matType = TRANSPARENT)
 
-# Bottom button
+rt.lights.append( DirectionalLight(direction = [-1,-1,-1], intensity = 0.8))
+rt.lights.append( AmbientLight(intensity = 0.1))
 
-rt.scene.append( Sphere(position = [0, -1.15, -4], radius = 0.2, material = charcoal))
+# Opacas - Izquierda
+rt.scene.append( Sphere(position = [-2.5, -1.25, -5], radius = 1, material = paint))
+rt.scene.append( Sphere(position = [-2.5, 1.25, -5], radius = 1, material = paint))
 
-# Mid Button
+# Reflectivas - Centro
+rt.scene.append( Sphere(position = [0, -1.25, -5], radius = 1, material = mirror))
+rt.scene.append( Sphere(position = [0, 1.25, -5], radius = 1, material = mirror))
 
-rt.scene.append( Sphere(position = [0, -0.65, -4.3], radius = 0.2, material = charcoal))
+# Refractivas - Derecha
+rt.scene.append( Sphere(position = [2.5, -1.25, -5], radius = 1, material = glass))
+rt.scene.append( Sphere(position = [2.5, 1.25, -5], radius = 1, material = glass))
 
-# Middle Snowball
-rt.scene.append( Sphere(position = (0, 0, -5), radius = 0.85, material = snow))
-
-# Top Button
-rt.scene.append( Sphere(position = [0, 0.15, -4.2], radius = 0.2, material = charcoal))
-
-# Left 1
-
-# Head
-rt.scene.append( Sphere(position = (0, 1.1, -5), radius = 0.65, material = snow))
-#Mouth
-
-# R1
-rt.scene.append( Sphere (position = (-0.1, 0.8, -4.435), radius = 0.055, material = button))
-
-#2
-rt.scene.append( Sphere (position = (-0.25, 0.9, -4.44), radius = 0.055, material = button))
-
-# L1
-rt.scene.append( Sphere (position = (0.1, 0.8, -4.435), radius = 0.055, material = button))
-
-#L2
-rt.scene.append( Sphere (position = (0.25, 0.9, -4.44), radius = 0.055, material = button))
-
-# Nose
-rt.scene.append(Sphere(position = (0, 1.05, -4.5), radius = 0.2, material = carrot))
-# Left Eye
-# White
-rt.scene.append( Sphere (position = (0.25, 1.2, -4.432), radius = 0.085, material = eyewhite))
-# Black
-rt.scene.append( Sphere (position = (0.25, 1.2, -4.375), radius = 0.05, material = eyeblack))
-
-
-# Right Eye
-# White
-rt.scene.append( Sphere (position = (-0.25, 1.2, -4.432), radius = 0.085, material = eyewhite))
-rt.scene.append( Sphere (position = (-0.25, 1.2, -4.375), radius = 0.05, material = eyeblack))
-
-brick = Material(diffuse = [1,0.2,0.2], spec = 128, Ks = 0.25)
-grass = Material(diffuse = [0.2,1.0,0.2], spec = 128, Ks = 0.2)
+# Dos adicionales para mostrar Refraccion / Refleccion
+rt.scene.append( Sphere(position = [2.5, 0, -7.5], radius = 0.5, material = paint))
+rt.scene.append( Sphere(position = [0, 0, -2.5], radius = 0.25, material = paint))
 
 
 rt.glRender()

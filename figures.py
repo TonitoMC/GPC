@@ -1,5 +1,6 @@
 from intercept import Intercept
 from MathLib import *
+from math import atan2, acos, pi
 class Shape(object):
     def __init__(self, position, material):
         self.position = position
@@ -38,8 +39,14 @@ class Sphere(Shape):
         P = vec_sum(orig, [x * t0 for x in dir ])
         normal = vec_sub(P, self.position)
         normal = [x / vec_norm(normal) for x in normal]
+
+        u = (atan2(normal[2], normal[0])) / (2 * pi) + 0.5
+        v = acos(-normal[1]) / pi
+
         return Intercept(point = P,
                          normal = normal,
                          distance = t0,
-                         obj = self
+                         obj = self,
+                         texCoords = [u,v],
+                         rayDirection = dir
                          )
