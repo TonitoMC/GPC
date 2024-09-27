@@ -7,8 +7,8 @@ from figures import *
 from material import *
 from lights import *
 from texture import *
-width = 400
-height = 225
+width = 800
+height = 450
 
 screen = pygame.display.set_mode((width, height), pygame.SCALED )
 clock = pygame.time.Clock()
