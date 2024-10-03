@@ -87,6 +87,23 @@ def vec_sum(a, b):
 def vec_norm(v):
      return sum(x**2 for x in v) ** 0.5
 
+def orthogonal_vector(normal):
+    # Return a vector that is not parallel to the normal
+    if abs(normal[0]) > abs(normal[1]):
+        return np.cross(normal, [0, 1, 0])
+    return np.cross(normal, [1, 0, 0])
+
+def normalize(vec):
+    norm = np.linalg.norm(vec)
+    return vec / norm if norm != 0 else vec
+
+def compute_uv_axes(normal):
+    u_dir = orthogonal_vector(normal)
+    u_dir = normalize(u_dir)
+    v_dir = np.cross(normal, u_dir)
+    v_dir = normalize(v_dir)
+    return u_dir, v_dir
+
 # Clase matrix para manejar operaciones con matrices
 class Matrix:
     def __init__(self, data):
