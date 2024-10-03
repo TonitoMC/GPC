@@ -52,7 +52,7 @@ class Sphere(Shape):
                          )
     
 class Plane(Shape):
-    def __init__(self, position, normal, material, texture_scale=(0.5, 0.5)):
+    def __init__(self, position, normal, material, texture_scale=(0.2, 0.2)):
         super().__init__(position, material)
         self.normal = normal / np.linalg.norm(normal)
         self.type = "Plane"
