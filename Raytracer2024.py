@@ -7,8 +7,8 @@ from figures import *
 from material import *
 from lights import *
 from texture import *
-width = 256
-height = 256
+width = 512
+height = 512
 
 screen = pygame.display.set_mode((width, height), pygame.SCALED )
 clock = pygame.time.Clock()
@@ -21,10 +21,10 @@ grass = Material(diffuse = [0.2,1.0,0.2], spec = 64, Ks = 0.2)
 mirror = Material(diffuse = [0.9,0.9,0.9], spec = 128, Ks = 0.2, matType = REFLECTIVE)
 pavement = Material(spec = 16, Ks = 0.1, matType = OPAQUE, texture = Texture("textures/conc.bmp"))
 floor = Material(diffuse = [1,1,1], spec = 16, Ks = 0.1, matType = REFLECTIVE, texture = Texture("textures/floor.bmp"))
-marble = Material(spec = 64, Ks = 0.25, matType = OPAQUE , texture = Texture("textures/marble.bmp"))
-water = Material(spec = 64, Ks = 0.2, ior = 1.5, matType = TRANSPARENT, texture = Texture("textures/watwat.bmp"))
+marble = Material(spec = 64, Ks = 0.25, matType = REFLECTIVE , texture = Texture("textures/marble.bmp"))
+wool = Material(spec = 64, Ks = 0.2, ior = 1.5, matType = OPAQUE, texture = Texture("textures/wool.bmp"))
 
-rt.lights.append( DirectionalLight(direction = [-1,-1,-1], intensity = 0.8))
+# rt.lights.append( DirectionalLight(direction = [-1,-1,-1], intensity = 0.8))
 rt.lights.append( AmbientLight(intensity = 1))
 
 # rt.scene.append( Sphere(position = [0,0,-5], radius = 1, material = brick))
@@ -47,14 +47,16 @@ brick2 = Material(spec = 16, Ks = 0.08, matType = OPAQUE, texture = Texture("tex
 # rt.scene.append( AABB(position = [1.5,-1.5,-5], sizes = [1,1,1], material = grass))
 
 # Brick cube
-rt.scene.append( AABB(position = [-1.5,-2,-7.5], sizes = [1.5,1.5,1.5], material = brick2))
+rt.scene.append( AABB(position = [-1.5,-2.25,-7.5], sizes = [1.5,1.5,1.5], material = brick2))
 
-# Water cube
-# rt.scene.append( AABB(position = [-1.5,-0.75,-7.5], sizes = [1,1,1], material = marble))
+#Water cube
+rt.scene.append( AABB(position = [1.5,-2.25,-7.5], sizes = [1,1,1], material = pavement))
+
+rt.scene.append( Disk(position = [1.5, -2.7499, -7.5], normal = [0,1,0], radius = 1.5, material = wool))
 
 
 # Floor
-rt.scene.append( Plane(position = [0, -2.75, -7.5], normal = [0,1,0], material = floor))
+rt.scene.append( Plane(position = [0, -2.75, -7.5], normal = [0,1,0], material = floor, texture_scale = (0.5,0.5)))
 
 # Ceiling
 rt.scene.append( Plane(position = [0, 6, -7.5], normal = [0,-1,0], material = pavement, texture_scale = (0.2,0.2)))
