@@ -1,6 +1,4 @@
-from math import cos, pi, sin
-import numpy as np
-from math import acos, asin, pi
+from math import cos, pi, sin, acos, asin, sqrt
 
 def refractVector(normal, incident, n1, n2):
     # Snell's Law
@@ -53,21 +51,20 @@ def fresnel(normal, incident, n1, n2):
     Kt = 1 - Kr
     return Kr, Kt
 
-def dot_product(a,b):
-     if len(a) != len(b):
-         raise ValueError("Los vectores deben tener la misma longitud")
-     return sum(x*y for x,y in zip(a,b))
-
-def vec_mul(a, b):
+def dot_product(a, b):
     if len(a) != len(b):
-        raise ValueError("Los vectores deben tener la misma longitud")
+        raise ValueError("Vectors must have the same length")
+    return sum(x * y for x, y in zip(a, b))
 
-    result = []
+def cross_product(a, b):
+    if len(a) != 3 or len(b) != 3:
+        raise ValueError("Cross product is only defined for 3-dimensional vectors")
+    return [
+        a[1] * b[2] - a[2] * b[1],
+        a[2] * b[0] - a[0] * b[2],
+        a[0] * b[1] - a[1] * b[0]
+    ]
 
-    for i in range(len(a)):
-        result.append(a[i] * b[i])
-
-    return result
 def vec_sub(a, b):
     if len(a) != len(b):
         raise ValueError("Both vectors must have the same length")
@@ -75,36 +72,30 @@ def vec_sub(a, b):
 
 def vec_sum(a, b):
     if len(a) != len(b):
-        raise ValueError("Los vectores deben tener la misma longitud")
-
-    result = []
-
-    for i in range(len(a)):
-        result.append(a[i] + b[i])
-
-    return result
+        raise ValueError("Vectors must have the same length")
+    return [a[i] + b[i] for i in range(len(a))]
 
 def vec_norm(v):
-     return sum(x**2 for x in v) ** 0.5
+    return sqrt(sum(x**2 for x in v))
 
 def orthogonal_vector(normal):
     # Return a vector that is not parallel to the normal
     if abs(normal[0]) > abs(normal[1]):
-        return np.cross(normal, [0, 1, 0])
-    return np.cross(normal, [1, 0, 0])
+        return cross_product(normal, [0, 1, 0])
+    return cross_product(normal, [1, 0, 0])
 
 def normalize(vec):
-    norm = np.linalg.norm(vec)
-    return vec / norm if norm != 0 else vec
+    norm = vec_norm(vec)
+    return [x / norm for x in vec] if norm != 0 else vec
 
 def compute_uv_axes(normal):
     u_dir = orthogonal_vector(normal)
     u_dir = normalize(u_dir)
-    v_dir = np.cross(normal, u_dir)
+    v_dir = cross_product(normal, u_dir)
     v_dir = normalize(v_dir)
     return u_dir, v_dir
 
-# Clase matrix para manejar operaciones con matrices
+# Matrix class for handling matrix operations
 class Matrix:
     def __init__(self, data):
         self.data = data
@@ -148,6 +139,7 @@ class Matrix:
     def transpose(self):
         mat = self.data
         return [list(row) for row in zip(*mat)]
+
     def getMinor(self, i, j):
         mat = self.data
         return [row[:j] + row[j + 1:] for row in (mat[:i] + mat[i + 1:])]
@@ -196,17 +188,13 @@ def TranslationMatrix(x, y, z):
     return Matrix([[1, 0, 0, x],
                    [0, 1, 0, y],
                    [0, 0, 1, z],
-                   [0, 0, 0, 1],
-                   ])
-
+                   [0, 0, 0, 1]])
 
 def ScaleMatrix(x, y, z):
     return Matrix([[x, 0, 0, 0],
                    [0, y, 0, 0],
                    [0, 0, z, 0],
-                   [0, 0, 0, 1],
-                   ])
-
+                   [0, 0, 0, 1]])
 
 def RotateMatrix(pitch, yaw, roll):
     pitch *= pi / 180
@@ -237,45 +225,33 @@ def RotateMatrix(pitch, yaw, roll):
     return pitchMat * yawMat * rollMat
 
 def barycentricCoords(A, B, C, P):
-	
-	# Se saca el �rea de los subtri�ngulos y del tri�ngulo
-	# mayor usando el Shoelace Theorem, una f�rmula que permite
-	# sacar el �rea de un pol�gono de cualquier cantidad de v�rtices.
+    areaPCB = abs((P[0]*C[1] + C[0]*B[1] + B[0]*P[1]) - 
+                  (P[1]*C[0] + C[1]*B[0] + B[1]*P[0]))
 
-	areaPCB = abs((P[0]*C[1] + C[0]*B[1] + B[0]*P[1]) - 
-				  (P[1]*C[0] + C[1]*B[0] + B[1]*P[0]))
+    areaACP = abs((A[0]*C[1] + C[0]*P[1] + P[0]*A[1]) - 
+                  (A[1]*C[0] + C[1]*P[0] + P[1]*A[0]))
 
-	areaACP = abs((A[0]*C[1] + C[0]*P[1] + P[0]*A[1]) - 
-				  (A[1]*C[0] + C[1]*P[0] + P[1]*A[0]))
+    areaABP = abs((A[0]*B[1] + B[0]*P[1] + P[0]*A[1]) - 
+                  (A[1]*B[0] + B[1]*P[0] + P[1]*A[0]))
 
-	areaABP = abs((A[0]*B[1] + B[0]*P[1] + P[0]*A[1]) - 
-				  (A[1]*B[0] + B[1]*P[0] + P[1]*A[0]))
+    areaABC = abs((A[0]*B[1] + B[0]*C[1] + C[0]*A[1]) - 
+                  (A[1]*B[0] + B[1]*C[0] + C[1]*A[0]))
 
-	areaABC = abs((A[0]*B[1] + B[0]*C[1] + C[0]*A[1]) - 
-				  (A[1]*B[0] + B[1]*C[0] + C[1]*A[0]))
+    if areaABC == 0:
+        return None
 
-	# Si el �rea del tri�ngulo es 0, retornar nada para
-	# prevenir divisi�n por 0.
-	if areaABC == 0:
-		return None
+    u = areaPCB / areaABC
+    v = areaACP / areaABC
+    w = areaABP / areaABC
 
-	# Determinar las coordenadas baric�ntricas dividiendo el 
-	# �rea de cada subtri�ngulo por el �rea del tri�ngulo mayor.
-	u = areaPCB / areaABC
-	v = areaACP / areaABC
-	w = areaABP / areaABC
+    if 0 <= u <= 1 and 0 <= v <= 1 and 0 <= w <= 1:
+        return (u, v, w)
+    else:
+        return None
 
-
-	# Si cada coordenada est� entre 0 a 1 y la suma de las tres
-	# es igual a 1, entonces son v�lidas.
-	if 0<=u<=1 and 0<=v<=1 and 0<=w<=1:
-		return (u, v, w)
-	else:
-		return None
-	
 def reflectVector(normal, direction):
-	reflect = 2 * dot_product(normal, direction)
-	reflect = [x * reflect for x in  normal]
-	reflect = vec_sub(reflect, direction)
-	reflect = [x / vec_norm(reflect) for x in reflect]
-	return reflect
+    reflect = 2 * dot_product(normal, direction)
+    reflect = [x * reflect for x in normal]
+    reflect = vec_sub(reflect, direction)
+    reflect = [x / vec_norm(reflect) for x in reflect]
+    return reflect

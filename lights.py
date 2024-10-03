@@ -61,10 +61,10 @@ class PointLight(Light):
         lightColor = super().GetLightColor(intercept)
 
         if intercept:
-            dir = np.subtract(self.position, intercept.point)
-            R = np.linalg.norm(dir)
-            dir /= R
-            intensity = np.dot(intercept.normal, dir)
+            dir = vec_sub(self.position, intercept.point)
+            R = vec_norm(dir)
+            dir = [x / R for x in dir]
+            intensity = dot_product(intercept.normal, dir)
             intensity = max(0, min(1, intensity))
             intensity *= (1 - intercept.obj.material.Ks)
 
@@ -83,9 +83,9 @@ class PointLight(Light):
         specColor = self.color
 
         if intercept:
-            dir = np.subtract(self.position, intercept.point)
-            R = np.linalg.norm(dir)
-            dir /= R
+            dir = vec_sub(self.position, intercept.point)
+            R = vec_norm(dir)
+            dir = [x / R for x in dir]
 
             reflect = reflectVector(intercept.normal, dir)
 
@@ -105,7 +105,7 @@ class PointLight(Light):
 class SpotLight(PointLight):
     def __init__(self, color = [1,1,1], intensity = 1, position = [0,0,0], direction = [0,-1,0], innerAngle = 50, outerAngle = 60):
         super().__init__(color, intensity, position)
-        self.direction = direction / np.linalg.norm(direction)
+        self.direction = [x / vec_norm(direction) for x in direction]
         self.innerAngle = innerAngle
         self.outerAngle = outerAngle
         self.lightType = "Spot"
@@ -125,13 +125,13 @@ class SpotLight(PointLight):
         if intercept == None:
             return 0
         
-        wi = np.subtract(self.position, intercept.point)
-        wi /= np.linalg.norm(wi)
+        wi = vec_sub(self.position, intercept.point)
+        wi = [x / vec_norm(wi) for x in wi]
 
         innerAngleRads = self.innerAngle * pi / 180
         outerAngleRads = self.outerAngle * pi / 180
 
-        attenuation = (-np.dot(self.direction, wi) - cos(outerAngleRads)) / (cos(innerAngleRads) - cos(outerAngleRads))
+        attenuation = (-dot_product(self.direction, wi) - cos(outerAngleRads)) / (cos(innerAngleRads) - cos(outerAngleRads))
 
         attenuation = min(1, max(0, attenuation))
 

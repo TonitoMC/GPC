@@ -54,28 +54,28 @@ class Sphere(Shape):
 class Plane(Shape):
     def __init__(self, position, normal, material, texture_scale=(0.2, 0.2)):
         super().__init__(position, material)
-        self.normal = normal / np.linalg.norm(normal)
+        self.normal = [x / vec_norm(normal) for x in  normal]
         self.type = "Plane"
         self.u_dir, self.v_dir = compute_uv_axes(self.normal)
         self.texture_scale = texture_scale
 
     def ray_intersect(self, orig, dir):
-        denom = np.dot(dir, self.normal)
+        denom = dot_product(dir, self.normal)
         if isclose(0, denom):
             return None
         
-        num = np.dot(np.subtract(self.position, orig), self.normal)
+        num = dot_product(vec_sub(self.position, orig), self.normal)
         t = num / denom
 
         if t < 0:
             return None
         
-        P = np.add(orig, np.array(dir) * t)
+        P = vec_sum(orig, [x * t for x in dir])
         
         # Project P onto the plane's basis vectors to get texture coordinates
-        local_p = np.subtract(P, self.position)
-        u = np.dot(local_p, self.u_dir) * self.texture_scale[0]
-        v = np.dot(local_p, self.v_dir) * self.texture_scale[1]
+        local_p = vec_sub(P, self.position)
+        u = dot_product(local_p, self.u_dir) * self.texture_scale[0]
+        v = dot_product(local_p, self.v_dir) * self.texture_scale[1]
 
         # Wrap the texture coordinates to be within [0, 1]
         u = u % 1.0
@@ -103,9 +103,9 @@ class Disk(Plane):
         if planeIntercept is None:
             return None
         
-        contact = np.subtract(planeIntercept.point, self.position)
+        contact = vec_sub(planeIntercept.point, self.position)
 
-        contact = np.linalg.norm(contact)
+        contact = vec_norm(contact)
 
         if contact > self.radius:
             return None

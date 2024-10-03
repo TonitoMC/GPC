@@ -14,7 +14,7 @@ screen = pygame.display.set_mode((width, height), pygame.SCALED )
 clock = pygame.time.Clock()
 
 rt = RendererRT(screen)
-rt.envMap = Texture("textures/lot.bmp")
+# rt.envMap = Texture("textures/lot.bmp")
 
 brick = Material(diffuse = [1.0,1.0,1.0], spec = 128, Ks = 0.25)
 grass = Material(diffuse = [0.2,1.0,0.2], spec = 64, Ks = 0.2)

@@ -35,10 +35,10 @@ class Material(object):
                 shadowIntercept = renderer.glCastRay(intercept.point, lightDir, intercept.obj)
 
             elif light.lightType == "Point":
-                lightDir = np.subtract(light.position, intercept.point)
-                R = np.linalg.norm(lightDir)
-                lightDir /= R
-                lightDir /= np.linalg.norm(lightDir)
+                lightDir = vec_sub(light.position, intercept.point)
+                R = vec_norm(lightDir)
+                lightDir = [x / R for x in lightDir]
+                lightDir = [x / vec_norm(lightDir) for x in lightDir]
                 shadowIntercept = renderer.glCastRay(intercept.point, lightDir, intercept.obj)
                 if shadowIntercept:
                     if shadowIntercept.distance >= R:
