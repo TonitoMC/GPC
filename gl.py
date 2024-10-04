@@ -17,7 +17,7 @@ def dword(d):
 	# 4 bytes
 	return struct.pack("=l", d)
 
-MAX_RECURSION_DEPTH = 3
+MAX_RECURSION_DEPTH = 6
 
 class RendererRT(object):
 	def __init__(self, screen):
