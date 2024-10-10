@@ -90,3 +90,17 @@ rt.scene.append(Cylinder(position=[2.5, 1.25, -7.5], radius=1, height = 1, mater
 # Refractive Cylinder
 rt.scene.append(Cylinder(position=[2.5, 1, -5], radius=1, height = 1.5, material=glass))
 ```
+
+## ChatGPT
+Tuve una conversación corta para que me explicara algunos de los algoritmos que se utilizan, para el cilindro sabía que iba a utilizar discos para las tapas.
+```
+¿Qué algoritmos puedo utilizar para calcular la intersección con un triángulo en un raytracer simple?
+¿Y en la parte circular de un cilindro?
+```
+### Resumen
+- Para el triángulo, utiliza el algoritmo de Möller–Trumbore.
+
+- Para la parte circular del cilindro, utiliza un método cuadrático para resolver la intersección con la superficie lateral del cilindro, y luego verifica los límites si el cilindro es finito. Si el discriminante es positivo, el rayo intersecta la superficie lateral del cilindro. Si el discriminante es negativo, no hay intersección.
+
+Incorporé estos algoritmos y algunos conceptos utilizados en otras formas, por ejemplo los discos para el cilindro y el concepto de un "buffer" para los interceptos en el cilindro.
+
