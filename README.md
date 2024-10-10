@@ -15,8 +15,7 @@ Para éste lab, tienen que investigar e implementar el Ray Intersect Algorithm d
 - Elipsoide/Esfera ovalada
 - Cualquier otra figura que se les ocurra
 
-## Primera Entrega
-### No funciona la reflexión, creo que es por la implementación de los triángulos y el cálculo de la normal (Están reflejando lo de adentro). Pendiente revisar, las texturas funcionan bien.
+## Salida del Programa
 ![Render](/renders/output.bmp)
 
 ## Figuras Elegidas
@@ -25,48 +24,45 @@ Se define por sus 3 vertices y utiliza el algoritmo Moller-Trumbore.
 ```python
 # Triángulo Definido por sus 3 Vértices
 class Triangle(Shape):
-    def __init__(self, v0, v1, v2, material):
-        super().__init__(material)
+    def __init__(self, v0, v1, v2, material, epsilon=1e-6):
+        super().__init__(v0, material)
         self.v0 = v0
         self.v1 = v1
         self.v2 = v2
         self.type = "Triangle"
+        self.epsilon = epsilon 
 
         # Cálculo de normal por producto cruz de 2 vectores
-        # sobre la superficie del triángulo
+        # sobre la superficie del triángulo, afecta el orden de los
+        # vértices para la normal
         self.edge1 = vec_sub(self.v1, self.v0)
         self.edge2 = vec_sub(self.v2, self.v0)
         self.normal = cross_product(self.edge1, self.edge2)
         self.normal = [x / vec_norm(self.normal) for x in self.normal]
 ```
-### Piramide
-Se define por coordenadas de base, altura y ancho. Utiliza 4 triangulos para las caras y una base cuadrada.
+### Cilindro
+Se define por coordenadas de posición, radio y altura. Se compone de una curva infinita y dos "caps" representados con planos
 ```python
-# Pirámide definida por coordenada de centro de base, altura, y ancho
-class Pyramid(Shape):
-    def __init__(self, base_center, base_size, height, material):
-        super().__init__(material)
-        self.type = "Pyramid"
-        self.triangles = []
+class Cylinder(Shape):
+    def __init__(self, position, radius, height, material):
+        super().__init__(position, material)
+        self.radius = radius
+        self.height = height
+        self.type = "Cylinder"
 
-        # Vertices de la base
-        half_size = base_size / 2
-        v0 = [base_center[0] - half_size, base_center[1], base_center[2] - half_size]
-        v1 = [base_center[0] + half_size, base_center[1], base_center[2] - half_size]
-        v2 = [base_center[0] + half_size, base_center[1], base_center[2] + half_size]
-        v3 = [base_center[0] - half_size, base_center[1], base_center[2] + half_size]
+        # Crear dos objetos Disk para las tapas superior e inferior
+        self.bottom_cap = Disk(
+            position=[position[0], position[1], position[2]],
+            normal=[0, -1, 0],  # Normal apuntando hacia abajo
+            radius=radius,
+            material=material
+        )
 
-        # Calculo del apice
-        apex = [base_center[0], base_center[1] + height, base_center[2]]
-
-        # Creacion de caras triangulares
-        self.triangles.append(Triangle(v0, v1, apex, material))
-        self.triangles.append(Triangle(v1, v2, apex, material))
-        self.triangles.append(Triangle(v2, v3, apex, material))
-        self.triangles.append(Triangle(v3, v0, apex, material))
-
-        # Base solida
-        self.triangles.append(Triangle(v0, v1, v2, material))
-        self.triangles.append(Triangle(v0, v2, v3, material))
+        self.top_cap = Disk(
+            position=[position[0], position[1] + height, position[2]],
+            normal=[0, 1, 0],  # Normal apuntando hacia arriba
+            radius=radius,
+            material=material
+        )
 ```
 
