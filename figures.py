@@ -9,108 +9,6 @@ class Shape(object):
     
     def ray_intersect(self, orig, dir):
         return None
-class Cone(Shape):
-    def __init__(self, position, radius, height, material):
-        super().__init__(position, material)
-        self.radius = radius
-        self.height = height
-        self.type = "Cone"
-
-    def ray_intersect(self, orig, dir):
-        # Vector from the cone's base to the ray origin
-        ox, oy, oz = orig[0] - self.position[0], orig[1] - self.position[1], orig[2] - self.position[2]
-        dx, dy, dz = dir[0], dir[1], dir[2]
-
-        # Defining the cone parameters: slope based on radius and height
-        k = (self.radius / self.height) ** 2
-
-        # Quadratic equation coefficients for intersection with the infinite cone surface
-        a = dx**2 + dz**2 - k * dy**2
-        b = 2 * (ox * dx + oz * dz - k * oy * dy)
-        c = ox**2 + oz**2 - k * oy**2
-
-        # Check if we have a valid quadratic equation
-        if a == 0:
-            return None  # Ray is parallel to the cone's side, no intersection
-
-        discriminant = b**2 - 4 * a * c
-        if discriminant < 0:
-            return None  # No intersection with the cone's surface
-
-        sqrt_discriminant = discriminant ** 0.5
-        t0 = (-b - sqrt_discriminant) / (2 * a)
-        t1 = (-b + sqrt_discriminant) / (2 * a)
-
-        if t0 < 0:
-            t0 = t1
-        if t0 < 0:
-            return None
-
-        # Compute y-coordinate of the intersection point
-        y_intersect = oy + t0 * dy
-
-        # Check if the intersection is within the cone's height range
-        if self.position[1] <= y_intersect <= self.position[1] + self.height:
-            P = vec_sum(orig, [t0 * d for d in dir])
-
-            # Normal for the cone's surface
-            normal = [
-                (P[0] - self.position[0]) / self.radius,
-                (self.radius / self.height),  # For the sloping surface
-                (P[2] - self.position[2]) / self.radius
-            ]
-            normal = [n / vec_norm(normal) for n in normal]
-
-            u = (atan2(normal[2], normal[0])) / (2 * pi) + 0.5
-            v = (y_intersect - self.position[1]) / self.height
-
-            return Intercept(
-                point=P,
-                normal=normal,
-                distance=t0,
-                texCoords=[u, v],
-                rayDirection=dir,
-                obj=self
-            )
-
-        # No intersection with the cone's surface, check base (disk) intersection
-        return self._intersect_base(orig, dir)
-
-    def _intersect_base(self, orig, dir):
-        # The base is a disk at y = position[1], radius = self.radius
-        dy = dir[1]
-
-        # Prevent division by zero for rays parallel to the base
-        if isclose(dy, 0):
-            return None  # Ray is parallel to the base, no intersection
-
-        t = (self.position[1] - orig[1]) / dy
-        if t < 0:
-            return None  # Base is behind the ray
-
-        P = vec_sum(orig, [t * d for d in dir])
-
-        # Check if the point lies within the base's radius
-        if vec_norm([P[0] - self.position[0], P[2] - self.position[2]]) <= self.radius:
-            normal = [0, -1, 0]  # Normal points straight down
-
-            u = (P[0] - self.position[0]) / (2 * self.radius) + 0.5
-            v = (P[2] - self.position[2]) / (2 * self.radius) + 0.5
-
-            return Intercept(
-                point=P,
-                normal=normal,
-                distance=t,
-                texCoords=[u, v],
-                rayDirection=dir,
-                obj=self
-            )
-
-        return None  # No intersection with the base
-
-
-
-
 
 class Sphere(Shape):
     def __init__(self, position, radius, material):
@@ -189,13 +87,6 @@ class Plane(Shape):
             rayDirection=dir,
             obj=self,
         )
-
-
-
-
-
-
-
 
 class Disk(Plane):
     def __init__(self, position, normal, radius, material):
