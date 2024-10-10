@@ -224,6 +224,8 @@ def RotateMatrix(pitch, yaw, roll):
 
     return pitchMat * yawMat * rollMat
 
+
+
 def barycentricCoords(A, B, C, P):
     areaPCB = abs((P[0]*C[1] + C[0]*B[1] + B[0]*P[1]) - 
                   (P[1]*C[0] + C[1]*B[0] + B[1]*P[0]))

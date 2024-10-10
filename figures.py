@@ -9,7 +9,109 @@ class Shape(object):
     
     def ray_intersect(self, orig, dir):
         return None
-    
+class Cone(Shape):
+    def __init__(self, position, radius, height, material):
+        super().__init__(position, material)
+        self.radius = radius
+        self.height = height
+        self.type = "Cone"
+
+    def ray_intersect(self, orig, dir):
+        # Vector from the cone's base to the ray origin
+        ox, oy, oz = orig[0] - self.position[0], orig[1] - self.position[1], orig[2] - self.position[2]
+        dx, dy, dz = dir[0], dir[1], dir[2]
+
+        # Defining the cone parameters: slope based on radius and height
+        k = (self.radius / self.height) ** 2
+
+        # Quadratic equation coefficients for intersection with the infinite cone surface
+        a = dx**2 + dz**2 - k * dy**2
+        b = 2 * (ox * dx + oz * dz - k * oy * dy)
+        c = ox**2 + oz**2 - k * oy**2
+
+        # Check if we have a valid quadratic equation
+        if a == 0:
+            return None  # Ray is parallel to the cone's side, no intersection
+
+        discriminant = b**2 - 4 * a * c
+        if discriminant < 0:
+            return None  # No intersection with the cone's surface
+
+        sqrt_discriminant = discriminant ** 0.5
+        t0 = (-b - sqrt_discriminant) / (2 * a)
+        t1 = (-b + sqrt_discriminant) / (2 * a)
+
+        if t0 < 0:
+            t0 = t1
+        if t0 < 0:
+            return None
+
+        # Compute y-coordinate of the intersection point
+        y_intersect = oy + t0 * dy
+
+        # Check if the intersection is within the cone's height range
+        if self.position[1] <= y_intersect <= self.position[1] + self.height:
+            P = vec_sum(orig, [t0 * d for d in dir])
+
+            # Normal for the cone's surface
+            normal = [
+                (P[0] - self.position[0]) / self.radius,
+                (self.radius / self.height),  # For the sloping surface
+                (P[2] - self.position[2]) / self.radius
+            ]
+            normal = [n / vec_norm(normal) for n in normal]
+
+            u = (atan2(normal[2], normal[0])) / (2 * pi) + 0.5
+            v = (y_intersect - self.position[1]) / self.height
+
+            return Intercept(
+                point=P,
+                normal=normal,
+                distance=t0,
+                texCoords=[u, v],
+                rayDirection=dir,
+                obj=self
+            )
+
+        # No intersection with the cone's surface, check base (disk) intersection
+        return self._intersect_base(orig, dir)
+
+    def _intersect_base(self, orig, dir):
+        # The base is a disk at y = position[1], radius = self.radius
+        dy = dir[1]
+
+        # Prevent division by zero for rays parallel to the base
+        if isclose(dy, 0):
+            return None  # Ray is parallel to the base, no intersection
+
+        t = (self.position[1] - orig[1]) / dy
+        if t < 0:
+            return None  # Base is behind the ray
+
+        P = vec_sum(orig, [t * d for d in dir])
+
+        # Check if the point lies within the base's radius
+        if vec_norm([P[0] - self.position[0], P[2] - self.position[2]]) <= self.radius:
+            normal = [0, -1, 0]  # Normal points straight down
+
+            u = (P[0] - self.position[0]) / (2 * self.radius) + 0.5
+            v = (P[2] - self.position[2]) / (2 * self.radius) + 0.5
+
+            return Intercept(
+                point=P,
+                normal=normal,
+                distance=t,
+                texCoords=[u, v],
+                rayDirection=dir,
+                obj=self
+            )
+
+        return None  # No intersection with the base
+
+
+
+
+
 class Sphere(Shape):
     def __init__(self, position, radius, material):
         super().__init__(position, material)
@@ -87,6 +189,12 @@ class Plane(Shape):
             rayDirection=dir,
             obj=self,
         )
+
+
+
+
+
+
 
 
 class Disk(Plane):
@@ -194,15 +302,17 @@ class AABB(Shape):
     
 # Triángulo Definido por sus 3 Vértices
 class Triangle(Shape):
-    def __init__(self, v0, v1, v2, material):
+    def __init__(self, v0, v1, v2, material, epsilon=1e-6):
         super().__init__(v0, material)
         self.v0 = v0
         self.v1 = v1
         self.v2 = v2
         self.type = "Triangle"
+        self.epsilon = epsilon 
 
         # Cálculo de normal por producto cruz de 2 vectores
-        # sobre la superficie del triángulo
+        # sobre la superficie del triángulo, afecta el orden de los
+        # vértices para la normal
         self.edge1 = vec_sub(self.v1, self.v0)
         self.edge2 = vec_sub(self.v2, self.v0)
         self.normal = cross_product(self.edge1, self.edge2)
@@ -213,41 +323,35 @@ class Triangle(Shape):
         # Möller–Trumbore
         h = cross_product(dir, self.edge2)
         a = dot_product(self.edge1, h)
-        
-        # Determina si el rayo es paralelo al triangulo
-        # en este caso es imposible que intercepte
-        if isclose(a, 0):
-            return None
-        
-        # Calcula si la intercepcion cae dentro del triangulo,
-        # similar a como funcionan las caras de un cubo con planos
 
-        # Revisa coordenada u
+        # Epsilon para comparación de punto flotante
+        if abs(a) < self.epsilon:
+            return None
+
         f = 1.0 / a
         s = vec_sub(orig, self.v0)
         u = f * dot_product(s, h)
-        
+
         if u < 0.0 or u > 1.0:
             return None
-        
-        # Revisa coordenada v
+
         q = cross_product(s, self.edge1)
         v = f * dot_product(dir, q)
-        
+
         if v < 0.0 or u + v > 1.0:
             return None
-        
+
         # Calculo de distancia al punto de intercepcion
         t = f * dot_product(self.edge2, q)
-        
-        if t < 0:
+
+        if t < self.epsilon:
             return None
-        
+
         P = vec_sum(orig, [x * t for x in dir])
 
         w = 1 - u - v
         texCoords = [u, v, w]
-        
+
         return Intercept(
             point=P,
             normal=self.normal,
@@ -257,42 +361,93 @@ class Triangle(Shape):
             obj=self
         )
 
-# Pirámide definida por coordenada de centro de base, altura, y ancho
-class Pyramid(Shape):
-    def __init__(self, base_center, base_size, height, material):
-        super().__init__(base_center, material)
-        self.type = "Pyramid"
-        self.triangles = []
+class Cylinder(Shape):
+    def __init__(self, position, radius, height, material):
+        super().__init__(position, material)
+        self.radius = radius
+        self.height = height
+        self.type = "Cylinder"
 
-        # Vertices de la base
-        half_size = base_size / 2
-        v0 = [base_center[0] - half_size, base_center[1], base_center[2] - half_size]
-        v1 = [base_center[0] + half_size, base_center[1], base_center[2] - half_size]
-        v2 = [base_center[0] + half_size, base_center[1], base_center[2] + half_size]
-        v3 = [base_center[0] - half_size, base_center[1], base_center[2] + half_size]
+        # Crear dos objetos Disk para las tapas superior e inferior
+        self.bottom_cap = Disk(
+            position=[position[0], position[1], position[2]],
+            normal=[0, -1, 0],  # Normal apuntando hacia abajo
+            radius=radius,
+            material=material
+        )
 
-        # Calculo del apice
-        apex = [base_center[0], base_center[1] + height, base_center[2]]
-
-        # Creacion de caras triangulares
-        self.triangles.append(Triangle(v0, v1, apex, material))
-        self.triangles.append(Triangle(v1, v2, apex, material))
-        self.triangles.append(Triangle(v2, v3, apex, material))
-        self.triangles.append(Triangle(v3, v0, apex, material))
-
-        # Base solida
-        self.triangles.append(Triangle(v0, v1, v2, material))
-        self.triangles.append(Triangle(v0, v2, v3, material))
+        self.top_cap = Disk(
+            position=[position[0], position[1] + height, position[2]],
+            normal=[0, 1, 0],  # Normal apuntando hacia arriba
+            radius=radius,
+            material=material
+        )
 
     def ray_intersect(self, orig, dir):
-        # Buffer para el intercepto más cercano
+        # Almacenaremos la intersección más cercana en esta variable
         closest_intercept = None
         min_distance = float("inf")
 
-        for triangle in self.triangles:
-            intercept = triangle.ray_intersect(orig, dir)
-            if intercept is not None and intercept.distance < min_distance:
-                min_distance = intercept.distance
-                closest_intercept = intercept
+        # El cilindro está alineado a lo largo del eje y
+        dx, dz = dir[0], dir[2]
+        ox, oz = orig[0] - self.position[0], orig[2] - self.position[2]
 
+        # Coeficientes cuadráticos para la intersección con el cilindro infinito (ignorando el eje y)
+        a = dx ** 2 + dz ** 2
+        b = 2 * (ox * dx + oz * dz)
+        c = ox ** 2 + oz ** 2 - self.radius ** 2
+
+        discriminant = b ** 2 - 4 * a * c
+
+        # Comprobar si hay intersección con la superficie curva o si la dirección es paralela al cilindro
+        if discriminant >= 0 and not isclose(a, 0):  # Si hay una intersección válida
+            sqrt_discriminant = discriminant ** 0.5
+            t0 = (-b - sqrt_discriminant) / (2 * a)
+            t1 = (-b + sqrt_discriminant) / (2 * a)
+
+            if t0 < 0:
+                t0 = t1
+            if t0 >= 0:  # Solo procesamos si t0 es válido
+                # Calcular la coordenada y del punto de intersección
+                y_intersect = orig[1] + t0 * dir[1]
+
+                # Verificar si el punto de intersección está dentro de los límites de la altura del cilindro
+                if self.position[1] <= y_intersect <= self.position[1] + self.height:
+                    P = vec_sum(orig, [t0 * d for d in dir])
+
+                    # Normal para la superficie curva del cilindro
+                    normal = [P[0] - self.position[0], 0, P[2] - self.position[2]]
+                    normal = [n / vec_norm(normal) for n in normal]
+
+                    u = (atan2(normal[2], normal[0])) / (2 * pi) + 0.5
+                    v = (y_intersect - self.position[1]) / self.height
+
+                    intercept = Intercept(
+                        point=P,
+                        normal=normal,
+                        distance=t0,
+                        texCoords=[u, v],
+                        rayDirection=dir,
+                        obj=self
+                    )
+
+                    # Actualizamos si esta intersección es más cercana
+                    if intercept.distance < min_distance:
+                        closest_intercept = intercept
+                        min_distance = intercept.distance
+
+        # Comprobar las tapas usando la clase Disk
+        bottom_intersect = self.bottom_cap.ray_intersect(orig, dir)
+        if bottom_intersect is not None and bottom_intersect.distance < min_distance:
+            closest_intercept = bottom_intersect
+            closest_intercept.normal = [0,-1,0]
+            min_distance = bottom_intersect.distance
+
+        top_intersect = self.top_cap.ray_intersect(orig, dir)
+        if top_intersect is not None and top_intersect.distance < min_distance:
+            closest_intercept = top_intersect
+            closest_intercept.normal = [0,1,0]
+            min_distance = top_intersect.distance
+
+        # Devolver la intersección más cercana encontrada (si existe)
         return closest_intercept
