@@ -104,3 +104,4 @@ Tuve una conversación corta para que me explicara algunos de los algoritmos que
 
 Incorporé estos algoritmos y algunos conceptos utilizados en otras formas, por ejemplo los discos para el cilindro y el concepto de un "buffer" para los interceptos en el cilindro.
 
+Nota: La primera entrega no había hecho nada del cilindro porque mi plan original era hacer pirámides con triángulos (y cilindros como mis 2 formas), pero la reflectividad y refractividad no me funcionó en lo absoluto :c
