@@ -65,4 +65,28 @@ class Cylinder(Shape):
             material=material
         )
 ```
+## Ubicaciones de los Elementos
 
+```python
+# Opaque Triangle
+rt.scene.append(Triangle( v0 = [-4.5, 0, -5],v1 = [-4.5, -2, -5], v2 = [-2.5, 0, -5], material = brick))
+
+# Reflective Triangle
+rt.scene.append(Triangle( v0 = [-1, 0, -5],v1 = [-1, -2, -5], v2 = [1, 0, -5], material = mirror))
+
+# Refractive Triangle
+rt.scene.append(Triangle( v0 = [2.5, 0, -5],v1 = [2.5, -2, -5], v2 = [4.5, 0, -5], material = glass))
+
+# Opaque Cylinder
+rt.scene.append(Cylinder(position=[-2.5, 1.25, -5], radius=1, height = 0.5, material=brick))
+
+# Reflective Cylinder
+rt.scene.append(Cylinder(position=[0, 1.25, -5], radius=1, height = 0.5, material=mirror))
+
+# Behind Refractive Cylinder for Demonstration
+rt.scene.append(Cylinder(position=[2.5, 1.25, -7.5], radius=1, height = 1, material=brick))
+
+
+# Refractive Cylinder
+rt.scene.append(Cylinder(position=[2.5, 1, -5], radius=1, height = 1.5, material=glass))
+```
