@@ -4,6 +4,10 @@
 ## Ubicación de Archivos:
 - **Textures:** Los archivos BMP utilizados como textura para las diferentes figuras dentro del programa
 - **Renders:** El output BMP del programa
+
+## Nota:
+Los artefactos que se observan en las cruces creo que son por la resolucion y las texturas, las figuras de cruces son AABBs y con resoluciones bajas a veces me salian puntos asi. Para el proyecto no pude subirle mas la resolucion porque se estaba trabando la compu :c
+
 ## Instrucciones
 El objetivo de éste proyecto es demostrar los conocimientos adquiridos durante la segunda parte del curso.
 
@@ -29,13 +33,17 @@ Brick: Material opaco con textura de ladrillo
 # Ladrillos para la piramide
 brick = Material(spec=16, Ks=0.08, matType=OPAQUE, texture=Texture("textures/brick2.bmp"))
 ```
-Military: Material 
+Military: Material para el casco
 ``` Python
 # Material para el casco militar
 military = Material(diffuse=[0.9, 0.9, 0.9], spec=128, Ks=0.2, matType=OPAQUE, texture =Texture("textures/military.bmp"))
 ```
-Pavement: Material del que están hechas las cruces
+whiteSolid: Material del que están hechas las cruces
+``` Python
+# Material de las cruces, blanco solido
+whiteSolid = Material(spec=16, Ks=0.1, matType=OPAQUE, texture=Texture("textures/conc.bmp"))
 Grass: Material utilizado en el suelo de la escena
+```
 
 ## Figuras Implementadas
 
