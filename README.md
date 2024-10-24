@@ -48,11 +48,6 @@ whiteSolid: Material del que están hechas las cruces, es concreto pero el nombr
 # Material de las cruces, blanco solido
 whiteSolid = Material(spec=16, Ks=0.1, matType=OPAQUE, texture=Texture("textures/conc.bmp"))
 ```
-Grass: Material utilizado en el suelo de la escena
-```
-# Material para el piso, carga una textura de grama obscura
-grass = Material(diffuse = [1,1,1], spec = 16, Ks = 0.1, matType = OPAQUE, texture = Texture("textures/grasss.bmp"))
-```
 ## Figuras Implementadas
 
 Cross: Compuesta de 6 AABB's para darle la forma deseada, se llama utilizando la posición del centro de su base y el tamaño de cada bloque que la compone.
