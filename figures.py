@@ -108,9 +108,54 @@ class Disk(Plane):
             return None
         
         return planeIntercept
-    
+
+
+class Cross(Shape):
+    def __init__(self, position, block_size, material, spacing=0):
+        super().__init__(position, material)
+        self.block_size = block_size
+        self.type = "Cross"
+
+        self.blocks = []
+        for i in range(4):
+            vertical_block = AABB(
+                position=[position[0], position[1] + (block_size + spacing) * i, position[2]],
+                sizes=[block_size, block_size, block_size],
+                material=material
+            )
+            self.blocks.append(vertical_block)
+
+        left_block = AABB(
+            position=[position[0] - block_size * 1 - spacing, position[1] + block_size * 2.5, position[2]],
+            sizes=[block_size, block_size, block_size],
+            material=material
+        )
+        self.blocks.append(left_block)
+
+        right_block = AABB(
+            position=[position[0] + block_size * 1 + spacing, position[1] + block_size * 2.5, position[2]],
+            sizes=[block_size, block_size, block_size],
+            material=material
+        )
+        self.blocks.append(right_block)
+
+    def ray_intersect(self, orig, dir):
+        min_distance = float("inf")
+        closest_intercept = None
+
+        for block in self.blocks:
+            intercept = block.ray_intersect(orig, dir)
+            if intercept is not None and intercept.distance < min_distance:
+                min_distance = intercept.distance
+                closest_intercept = intercept
+
+        if closest_intercept:
+            return closest_intercept
+        
+        else:
+            return None
+
 class AABB(Shape):
-    # Axis Aligned Bounding Box
     def __init__(self, position, sizes, material):
         super().__init__(position, material)
         self.sizes = sizes
@@ -134,7 +179,6 @@ class AABB(Shape):
         self.planes.append(frontPlane)
         self.planes.append(backPlane)
 
-        # Bounds
 
         self.boundsMin = [0,0,0]
 
@@ -341,4 +385,106 @@ class Cylinder(Shape):
             min_distance = top_intersect.distance
 
         # Devolver la intersección más cercana encontrada (si existe)
+        return closest_intercept
+
+class HalfSphere(Shape):
+    def __init__(self, position, radius, material):
+        super().__init__(position, material)
+        self.radius = radius
+        self.type = "HalfSphere"
+
+    def ray_intersect(self, orig, dir):
+        t0, t1 = self.intersect_sphere(orig, dir)
+        
+        if t0 is None and t1 is None:
+            return None
+
+        P0 = vec_sum(orig, [t0 * d for d in dir]) if t0 is not None else None
+        P1 = vec_sum(orig, [t1 * d for d in dir]) if t1 is not None else None
+
+        # Restriccion de puntos hacia la mitad izquierda
+        P0_valid = P0 and P0[0] <= self.position[0]
+        P1_valid = P1 and P1[0] <= self.position[0]
+
+        if not P0_valid and not P1_valid:
+            return None
+
+        if P0_valid and (not P1_valid or t0 < t1):
+            return self.create_intercept(P0, t0, dir)
+        if P1_valid:
+            return self.create_intercept(P1, t1, dir)
+
+        return None
+
+    def intersect_sphere(self, orig, dir):
+        L = vec_sub(self.position, orig)
+        tca = dot_product(L, dir)
+        d2 = vec_norm(L) ** 2 - tca ** 2
+
+        if d2 > self.radius ** 2:
+            return None, None
+
+        thc = (self.radius ** 2 - d2) ** 0.5
+        t0 = tca - thc
+        t1 = tca + thc
+
+        if t0 < 0 and t1 < 0:
+            return None, None
+
+        return (t0 if t0 >= 0 else None), (t1 if t1 >= 0 else None)
+
+    def create_intercept(self, P, t, dir):
+        normal = vec_sub(P, self.position)
+        normal = [x / vec_norm(normal) for x in normal]
+
+        u = (atan2(normal[2], normal[0])) / (2 * pi) + 0.5
+        v = acos(-normal[1]) / pi
+
+        return Intercept(
+            point=P,
+            normal=normal,
+            distance=t,
+            texCoords=[u, v],
+            obj=self,
+            rayDirection=dir
+        )
+
+# Pirámide definida por coordenada de centro de base, altura, y ancho
+class Pyramid(Shape):
+    def __init__(self, base_center, base_size, height, material):
+        super().__init__(base_center, material)
+        self.type = "Pyramid"
+        self.triangles = []
+
+        # Vertices de la base
+        half_size = base_size / 2
+        v0 = [base_center[0] - half_size, base_center[1], base_center[2] - half_size]
+        v1 = [base_center[0] + half_size, base_center[1], base_center[2] - half_size]
+        v2 = [base_center[0] + half_size, base_center[1], base_center[2] + half_size]
+        v3 = [base_center[0] - half_size, base_center[1], base_center[2] + half_size]
+
+        # Calculo del apice
+        apex = [base_center[0], base_center[1] + height, base_center[2]]
+
+        # Creacion de caras triangulares
+        self.triangles.append(Triangle(v0, v1, apex, material))
+        self.triangles.append(Triangle(v1, v2, apex, material))
+        self.triangles.append(Triangle(v2, v3, apex, material))
+        self.triangles.append(Triangle(v3, v0, apex, material))
+
+        # Base solida
+        self.triangles.append(Triangle(v0, v1, v2, material))
+        self.triangles.append(Triangle(v0, v2, v3, material))
+
+    def ray_intersect(self, orig, dir):
+        # Buffer para el intercepto más cercano
+        closest_intercept = None
+        min_distance = float("inf")
+
+        for triangle in self.triangles:
+            intercept = triangle.ray_intersect(orig, dir)
+            if intercept is not None and intercept.distance < min_distance:
+                min_distance = intercept.distance
+                closest_intercept = intercept
+
         return closest_intercept
