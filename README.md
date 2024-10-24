@@ -12,6 +12,8 @@ Los alumnos deben entregar un Ray Tracer simple que trate de recrear una escena/
 ## Resultados
 Imagen de Inspiración: Master of Puppets de Metallica
 
+![image](https://github.com/user-attachments/assets/84b60de2-e990-49dd-8e7b-944326719a92)
+
 La escena creada utilizando el Raytracer (Algunos elementos adicionales agregados a la escena utilizando formas simples)
 
 ![Render](/renders/output.bmp)
