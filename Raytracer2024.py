@@ -5,8 +5,8 @@ from figures import *
 from material import *
 from lights import *
 from texture import *
-width = 650
-height = 650
+width = 500
+height = 500
 
 screen = pygame.display.set_mode((width, height), pygame.SCALED )
 clock = pygame.time.Clock()
@@ -22,7 +22,7 @@ rt.glClear()
 mirror = Material(diffuse=[0.9, 0.9, 0.9], spec=128, Ks=0.2, matType=REFLECTIVE)
 
 # Material de las cruces, blanco solido
-whiteSolid = Material(spec=16, Ks=0.1, matType=OPAQUE, texture=Texture("textures/pavement.bmp"))
+whiteSolid = Material(spec=16, Ks=0.1, matType=OPAQUE, texture=Texture("textures/conc.bmp"))
 
 # Material para el casco militar
 military = Material(diffuse=[0.9, 0.9, 0.9], spec=128, Ks=0.2, matType=OPAQUE, texture =Texture("textures/military.bmp"))
