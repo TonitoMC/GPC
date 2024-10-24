@@ -6,7 +6,7 @@
 - **Renders:** El output BMP del programa
 
 ## Nota:
-Los artefactos que se observan en las cruces creo que son por la resolucion y las texturas, las figuras de cruces son AABBs y con resoluciones bajas a veces me salian puntos asi. Para el proyecto no pude subirle mas la resolucion porque se estaba trabando la compu :c
+Los artefactos que se observan en las cruces creo que son por la resolucion y las texturas, las figuras de cruces son AABBs y con resoluciones bajas a veces me salian puntos asi. También son bastante como "HD" las texturas que tenía, estas se las había puesto a paredes enteras antes en el RT3 por ejemplo y se miraban bastante bien. No pude conseguir una que se viera mejor en las cruces
 
 ## Instrucciones
 El objetivo de éste proyecto es demostrar los conocimientos adquiridos durante la segunda parte del curso.
