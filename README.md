@@ -57,5 +57,17 @@ rt.scene.append(HalfSphere(position = [-3.75, -1.625, -8.5], radius = 0.7, mater
 ## Iluminacion
 
 Directional Lights: Se implementaron dos luces direccionales para darle un poco de dinamicidad a la escena, cada una va en diagonal hacia al frente y abajo pero una hacia la izquierda y otra hacia la derecha.
+``` Python
+# Luz direccional apuntando en diagonal hacia delante / izquierda / abajo
+rt.lights.append(DirectionalLight(direction=[-1, -1, -1], intensity=0.7))
 
+# Luz direccional apuntando en diagonal hacia delante / derecha / abajo
+rt.lights.append(DirectionalLight(direction=[1, -1, -1], intensity=0.8))
+```
 Spotlights: Se implementaron dos spotlights diferentes para mostrar un poco la reflectividad del cilindro
+``` Python
+# Spotlight sobre la cruz izquierda de color rojo para hacer mas interesante la escena, baja intensidad
+rt.lights.append( SpotLight(position = [-3, 2.25, -8.5], color = [1, 0, 0], innerAngle = 30, outerAngle = 40, direction = [0, -1, 0], intensity = 3))
+
+# Spotlight sobre la cruz derecha de color amarillo para hacer mas interesante la escena, baja intensidad
+rt.lights.append( SpotLight(position = [3, 2.25, -8.5], color = [1, 1, 0], innerAngle = 30, outerAngle = 40, direction = [0, -1, 0], intensity = 3))
