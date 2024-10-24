@@ -6,7 +6,7 @@
 - **Renders:** El output BMP del programa
 
 ## Nota:
-Los artefactos que se observan en las cruces creo que son por la resolucion y las texturas, las figuras de cruces son AABBs y con resoluciones bajas a veces me salian puntos asi. También son bastante como "HD" las texturas que tenía, estas se las había puesto a paredes enteras antes en el RT3 por ejemplo y se miraban bastante bien. No pude conseguir una que se viera mejor en las cruces
+Los artefactos que se observan en las cruces creo que son por la resolucion y las texturas, no logre encontrar por que salian y asumo que es por eso. A mis AABB's les pasaba lo mismo, lastimosamente para el proyecto no pude ponerle mas resolucion porque la compu explotaba :c
 
 ## Instrucciones
 El objetivo de éste proyecto es demostrar los conocimientos adquiridos durante la segunda parte del curso.
@@ -43,13 +43,16 @@ Military: Material para el casco
 # Material para el casco militar
 military = Material(diffuse=[0.9, 0.9, 0.9], spec=128, Ks=0.2, matType=OPAQUE, texture =Texture("textures/military.bmp"))
 ```
-whiteSolid: Material del que están hechas las cruces
+whiteSolid: Material del que están hechas las cruces, es concreto pero el nombre quedo como white :)
 ``` Python
 # Material de las cruces, blanco solido
 whiteSolid = Material(spec=16, Ks=0.1, matType=OPAQUE, texture=Texture("textures/conc.bmp"))
+```
 Grass: Material utilizado en el suelo de la escena
 ```
-
+# Material para el piso, carga una textura de grama obscura
+grass = Material(diffuse = [1,1,1], spec = 16, Ks = 0.1, matType = OPAQUE, texture = Texture("textures/grasss.bmp"))
+```
 ## Figuras Implementadas
 
 Cross: Compuesta de 6 AABB's para darle la forma deseada, se llama utilizando la posición del centro de su base y el tamaño de cada bloque que la compone.
