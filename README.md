@@ -1,107 +1,61 @@
-# Lab 3: Ray-Intersect Algorithm, New Shapes
-## Autor: José Mérida | Septiembre 2024
+# Proyecto 2: Raytracer
+## Autor: José Mérida | 23 de Octubre 2024
+
 ## Ubicación de Archivos:
-- **Renders:** El output BMP del programa y cualquier otro render requerido para la entrega
-- **Textures:** Texturas aplicadas a los diferentes objetos
+- **Textures:** Los archivos BMP utilizados como textura para las diferentes figuras dentro del programa
+- **Renders:** El output BMP del programa
 ## Instrucciones
-El objetivo de este laboratorio es que los alumnos rendericen nuevas figuras a través del RayTracer simple que hemos estado trabajando.
+El objetivo de éste proyecto es demostrar los conocimientos adquiridos durante la segunda parte del curso.
 
-Para éste lab, tienen que investigar e implementar el Ray Intersect Algorithm de DOS figuras diferentes a las aprendidas en clase. Las figuras pueden ser cualquiera de las siguientes opciones:
+Los alumnos deben entregar un Ray Tracer simple que trate de recrear una escena/imagen escogida por el alumno por medio de figuras simples.
 
-- Triángulo (puede ser usado después para dibujar modelos)
-- OBBs (oriented bounding boxes)
-- Cilindro o capsula
-- Toroide/dona
-- Elipsoide/Esfera ovalada
-- Cualquier otra figura que se les ocurra
+## Resultados
+Imagen de Inspiración: Master of Puppets de Metallica
 
-## Salida del Programa
+La escena creada utilizando el Raytracer (Algunos elementos adicionales agregados a la escena utilizando formas simples)
+
 ![Render](/renders/output.bmp)
 
-## Figuras Elegidas
-### Triángulo
-Se define por sus 3 vertices y utiliza el algoritmo Moller-Trumbore.
-```python
-# Triángulo Definido por sus 3 Vértices
-class Triangle(Shape):
-    def __init__(self, v0, v1, v2, material, epsilon=1e-6):
-        super().__init__(v0, material)
-        self.v0 = v0
-        self.v1 = v1
-        self.v2 = v2
-        self.type = "Triangle"
-        self.epsilon = epsilon 
-
-        # Cálculo de normal por producto cruz de 2 vectores
-        # sobre la superficie del triángulo, afecta el orden de los
-        # vértices para la normal
-        self.edge1 = vec_sub(self.v1, self.v0)
-        self.edge2 = vec_sub(self.v2, self.v0)
-        self.normal = cross_product(self.edge1, self.edge2)
-        self.normal = [x / vec_norm(self.normal) for x in self.normal]
+## Materiales Utilizados
+Mirror: Material reflectivo sin textura.
+``` Python
+# Mirror, material reflectivo simple
+mirror = Material(diffuse=[0.9, 0.9, 0.9], spec=128, Ks=0.2, matType=REFLECTIVE)
 ```
-### Cilindro
-Se define por coordenadas de posición, radio y altura. Se compone de una curva infinita y dos "caps" representados con planos
-```python
-class Cylinder(Shape):
-    def __init__(self, position, radius, height, material):
-        super().__init__(position, material)
-        self.radius = radius
-        self.height = height
-        self.type = "Cylinder"
-
-        # Crear dos objetos Disk para las tapas superior e inferior
-        self.bottom_cap = Disk(
-            position=[position[0], position[1], position[2]],
-            normal=[0, -1, 0],  # Normal apuntando hacia abajo
-            radius=radius,
-            material=material
-        )
-
-        self.top_cap = Disk(
-            position=[position[0], position[1] + height, position[2]],
-            normal=[0, 1, 0],  # Normal apuntando hacia arriba
-            radius=radius,
-            material=material
-        )
+Brick: Material opaco con textura de ladrillo
+``` Python
+# Ladrillos para la piramide
+brick = Material(spec=16, Ks=0.08, matType=OPAQUE, texture=Texture("textures/brick2.bmp"))
 ```
-## Ubicaciones de los Elementos
+Military: Material 
+``` Python
+# Material para el casco militar
+military = Material(diffuse=[0.9, 0.9, 0.9], spec=128, Ks=0.2, matType=OPAQUE, texture =Texture("textures/military.bmp"))
+```
+Pavement: Material del que están hechas las cruces
+Grass: Material utilizado en el suelo de la escena
 
-```python
-# Opaque Triangle
-rt.scene.append(Triangle( v0 = [-4.5, 0, -5],v1 = [-4.5, -2, -5], v2 = [-2.5, 0, -5], material = brick))
+## Figuras Implementadas
 
-# Reflective Triangle
-rt.scene.append(Triangle( v0 = [-1, 0, -5],v1 = [-1, -2, -5], v2 = [1, 0, -5], material = mirror))
-
-# Refractive Triangle
-rt.scene.append(Triangle( v0 = [2.5, 0, -5],v1 = [2.5, -2, -5], v2 = [4.5, 0, -5], material = glass))
-
-# Opaque Cylinder
-rt.scene.append(Cylinder(position=[-2.5, 1.25, -5], radius=1, height = 0.5, material=brick))
-
-# Reflective Cylinder
-rt.scene.append(Cylinder(position=[0, 1.25, -5], radius=1, height = 0.5, material=mirror))
-
-# Behind Refractive Cylinder for Demonstration
-rt.scene.append(Cylinder(position=[2.5, 1.25, -7.5], radius=1, height = 1, material=brick))
-
-
-# Refractive Cylinder
-rt.scene.append(Cylinder(position=[2.5, 1, -5], radius=1, height = 1.5, material=glass))
+Cross: Compuesta de 6 AABB's para darle la forma deseada, se llama utilizando la posición del centro de su base y el tamaño de cada bloque que la compone.
+``` Python
+rt.scene.append( Cross(position = [-6, -3.5, -8.5], block_size = 0.75, material = whiteSolid))
+```
+Pyramid: Compuesta por triangulos, se llama utilizando el centro de la pirámide, las dimensinoes de su base y su altura.
+``` Python
+rt.scene.append( Pyramid(base_center = [0, -3.5, -100], base_size = 30, height = 20, material = brick))
+```
+Cylinder: Compuesto por una curva infinita y dos planos como "caps", se llama utilizando coordenadas de posición, radio y altura.
+``` Python
+rt.scene.append(Cylinder(position=[0, -3.5, -8.5], radius=1.25, height = 1.5, material=mirror))
+```
+Hollow Sphere: Compuesta por una esfera ligeramente modificada para que únicamente tome en cuenta los hits que suceden de una mitad, al igual que los hits que suceden "atrás". Se llama utilizando coordendas de posición y radio.
+``` Python
+rt.scene.append(HalfSphere(position = [-3.75, -1.625, -8.5], radius = 0.7, material = military)) # Casco colgando de la primera cruz
 ```
 
-## ChatGPT
-Tuve una conversación corta para que me explicara algunos de los algoritmos que se utilizan, para el cilindro sabía que iba a utilizar discos para las tapas.
-```
-¿Qué algoritmos puedo utilizar para calcular la intersección con un triángulo en un raytracer simple?
-¿Y en la parte circular de un cilindro?
-```
-### Resumen
-- Para el triángulo, utiliza el algoritmo de Möller–Trumbore.
+## Iluminacion
 
-- Para la parte circular del cilindro, utiliza un método cuadrático para resolver la intersección con la superficie lateral del cilindro, y luego verifica los límites si el cilindro es finito. Si el discriminante es positivo, el rayo intersecta la superficie lateral del cilindro. Si el discriminante es negativo, no hay intersección.
+Directional Lights: Se implementaron dos luces direccionales para darle un poco de dinamicidad a la escena, cada una va en diagonal hacia al frente y abajo pero una hacia la izquierda y otra hacia la derecha.
 
-Incorporé estos algoritmos y algunos conceptos utilizados en otras formas, por ejemplo los discos para el cilindro y el concepto de un "buffer" para los interceptos en el cilindro.
-
-Nota: La primera entrega no había hecho nada del cilindro porque mi plan original era hacer pirámides con triángulos (y cilindros como mis 2 formas), pero la reflectividad y refractividad no me funcionó en lo absoluto :c
+Spotlights: Se implementaron dos spotlights diferentes para mostrar un poco la reflectividad del cilindro
