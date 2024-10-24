@@ -23,12 +23,17 @@ La escena creada utilizando el Raytracer (Algunos elementos adicionales agregado
 ![Render](/renders/output.bmp)
 
 ## Materiales Utilizados
-Mirror: Material reflectivo sin textura.
+Grass: Material utilizado para el piso
 ``` Python
 # Mirror, material reflectivo simple
 mirror = Material(diffuse=[0.9, 0.9, 0.9], spec=128, Ks=0.2, matType=REFLECTIVE)
 ```
-Brick: Material opaco con textura de ladrillo
+Mirror: Material utilizado para el cilindro
+``` Python
+# Mirror, material reflectivo simple
+mirror = Material(diffuse=[0.9, 0.9, 0.9], spec=128, Ks=0.2, matType=REFLECTIVE)
+```
+Brick: Materia utilizado para la piramide
 ``` Python
 # Ladrillos para la piramide
 brick = Material(spec=16, Ks=0.08, matType=OPAQUE, texture=Texture("textures/brick2.bmp"))
@@ -49,7 +54,8 @@ Grass: Material utilizado en el suelo de la escena
 
 Cross: Compuesta de 6 AABB's para darle la forma deseada, se llama utilizando la posición del centro de su base y el tamaño de cada bloque que la compone.
 ``` Python
-rt.scene.append( Cross(position = [-6, -3.5, -8.5], block_size = 0.75, material = whiteSolid))
+# Material para el piso, carga una textura de grama obscura
+grass = Material(diffuse = [1,1,1], spec = 16, Ks = 0.1, matType = OPAQUE, texture = Texture("textures/grasss.bmp"))
 ```
 Pyramid: Compuesta por triangulos, se llama utilizando el centro de la pirámide, las dimensinoes de su base y su altura.
 ``` Python
