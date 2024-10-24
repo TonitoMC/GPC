@@ -116,6 +116,7 @@ class Cross(Shape):
         self.block_size = block_size
         self.type = "Cross"
 
+        # Bloques AABB
         self.blocks = []
         for i in range(4):
             vertical_block = AABB(
@@ -139,6 +140,7 @@ class Cross(Shape):
         )
         self.blocks.append(right_block)
 
+    # Ver interceptos de cada bloque y retornar el mas cercano
     def ray_intersect(self, orig, dir):
         min_distance = float("inf")
         closest_intercept = None
