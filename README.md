@@ -4,12 +4,19 @@
 Teclas:
 
 No. 1: Llenado de Texturas
+
 No. 2: Unicamente Lineas
+
 No. 3: Vertex Shader Normal
+
 No. 4: Vertex Shader Explode
+
 No. 5: Fragment Shader Normal
+
 No. 6: Fragment Shader Pixel
+
 No. 7: Fragment Shader Grayscale
+
 
 ### Vertex Shader: Explode
 
