@@ -1,5 +1,5 @@
 from obj import Obj
-from Buffer import Buffer
+from buffer import Buffer
 from pygame import image
 from OpenGL.GL import *
 import glm

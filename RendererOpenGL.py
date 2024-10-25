@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 from gl import Renderer
-from Buffer import Buffer
+from buffer import Buffer
 from shaders import *
 from model import Model
 
