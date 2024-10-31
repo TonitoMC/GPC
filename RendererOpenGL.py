@@ -25,7 +25,8 @@ nadeModel = Model('models/razenade.obj')
 nadeModel.AddTextures('textures/razenade.bmp')
 renderer.scene.append(nadeModel)
 nadeModel.rotation.y = 180
-nadeModel.scale = (10,10,10)
+nadeModel.scale = (15,15,15)
+nadeModel.translation.z = -4
 isRunning = True
 
 while isRunning:
@@ -38,23 +39,28 @@ while isRunning:
 			if event.key == pygame.K_ESCAPE:
 				isRunning = False
 			elif event.key == pygame.K_1:
-				renderer.FillMode()
-			elif event.key == pygame.K_2:
-				renderer.WireFrameMode()
-			elif event.key == pygame.K_3:
 				vshader = vertex_shader
 				renderer.SetShaders(vshader, fshader)
+			elif event.key == pygame.K_2:
+				vshader = breathing_shader
+				renderer.SetShaders(vshader, fshader)
+			elif event.key == pygame.K_3:
+				vshader = spring_shader
+				renderer.SetShaders(vshader, fshader)
 			elif event.key == pygame.K_4:
-				vshader = explode_shader
+				vshader = bubble_shader
 				renderer.SetShaders(vshader, fshader)
 			elif event.key == pygame.K_5:
 				fshader = fragment_shader
 				renderer.SetShaders(vshader, fshader)
 			elif event.key == pygame.K_6:
-				fshader = pixel_shader
+				fshader = aberration_shader
 				renderer.SetShaders(vshader, fshader)
 			elif event.key == pygame.K_7:
 				fshader = grayscale_shader
+				renderer.SetShaders(vshader, fshader)
+			elif event.key == pygame.K_8:
+				fshader = light_mouse_shader
 				renderer.SetShaders(vshader, fshader)
 
 	if keys[K_LEFT]:
@@ -63,7 +69,16 @@ while isRunning:
 	elif keys[K_RIGHT]:
 		nadeModel.rotation.y += 45 * deltaTime
 
-
+	elif keys[K_a]:
+		renderer.camera.position.x -= 1 * deltaTime
+	elif keys[K_d]:
+		renderer.camera.position.x += 1 * deltaTime
+	elif keys[K_s]:
+		renderer.camera.position.y -= 1 * deltaTime
+	elif keys[K_w]:
+		renderer.camera.position.y += 1 * deltaTime
+	mouse_x, mouse_y = pygame.mouse.get_pos()
+	renderer.SetMousePos(mouse_x, mouse_y)
 	renderer.time += deltaTime
 	renderer.Render()
 	pygame.display.flip()

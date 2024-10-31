@@ -7,18 +7,19 @@ class Camera(object):
     def __init__(self, width, height):
         self.position = glm.vec3(0,0,0)
         self.rotation = glm.vec3(0,0,0)
+        
         self.screenWidth = width
         self.screenHeight = height
-        
-        self.CreateProjectionMatrix(60,0.1, 1000)
 
+        self.CreateProjectionMatrix(60, 0.1, 1000)
+        
     def GetViewMatrix(self):
 
         identity = glm.mat4(1)
 
         translateMat = glm.translate(identity, self.position)
-        pitchMat = glm.rotate(identity, glm.radians(self.rotation.x), glm.vec3(1,0,0)) 
 
+        pitchMat = glm.rotate(identity, glm.radians(self.rotation.x), glm.vec3(1,0,0)) 
         yawMat   = glm.rotate(identity, glm.radians(self.rotation.y), glm.vec3(0,1,0))
         rollMat  = glm.rotate(identity, glm.radians(self.rotation.z), glm.vec3(0,0,1))
 
@@ -39,4 +40,3 @@ class Camera(object):
         self.rotation = glm.eulerAngles(glm.quat_cast(viewMatrix))
         self.rotation = glm.degrees(glm.eulerAngles(glm.quat_cast(viewMatrix)))
         print(self.rotation)
-        
