@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GL.shaders import compileProgram, compileShader
 import numpy as np
 from camera import *
-
+from skybox import Skybox
 class Renderer(object):
 	def __init__(self, screen):
 		self.screen = screen
@@ -25,6 +25,11 @@ class Renderer(object):
 		self.scene = []
 		self.active_shaders = None
 
+		self.skybox = None
+
+	def CreateSkybox(self, textureList, vShader, fShader):
+		self.skybox = Skybox(textureList, vShader, fShader)
+
 	def FillMode(self):
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 	
@@ -44,6 +49,9 @@ class Renderer(object):
 
 	def Render(self):
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+		if self.skybox is not  None:
+			self.skybox.Render(self.camera.GetViewMatrix(), self.camera.GetProjectionMatrix())
 
 		if self.active_shaders is not None:
 			current_view_matrix = self.camera.GetViewMatrix()
@@ -66,6 +74,7 @@ class Renderer(object):
 				glUniformMatrix4fv(glGetUniformLocation(self.active_shaders, "modelMatrix"),
 								1, GL_FALSE, glm.value_ptr(current_model_matrix))
 			obj.Render()
+
 
 
 	def normalize_mouse_position(self):

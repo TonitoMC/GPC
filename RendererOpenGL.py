@@ -16,8 +16,20 @@ clock = pygame.time.Clock()
 
 renderer = Renderer(screen)
 
+skyboxTextures = ["skybox/right.jpg",
+				  "skybox/left.jpg",
+				  "skybox/top.jpg",
+				  "skybox/bottom.jpg",
+				  "skybox/front.jpg",
+				  "skybox/back.jpg"]
+
 vshader = vertex_shader
 fshader = fragment_shader
+
+renderer.CreateSkybox(skyboxTextures, skybox_vertex_shader, skybox_fragment_shader)
+
+camDistance = 5
+camAngle = 0
 
 renderer.SetShaders(vshader, fshader)
 
@@ -70,16 +82,20 @@ while isRunning:
 		nadeModel.rotation.y += 45 * deltaTime
 
 	elif keys[K_a]:
-		renderer.camera.position.x -= 1 * deltaTime
+		camAngle -= 45 * deltaTime
+
 	elif keys[K_d]:
-		renderer.camera.position.x += 1 * deltaTime
+		camAngle += 45 * deltaTime
 	elif keys[K_s]:
-		renderer.camera.position.y -= 1 * deltaTime
+		camDistance -= 2 * deltaTime
 	elif keys[K_w]:
-		renderer.camera.position.y += 1 * deltaTime
+		camDistance += 2 * deltaTime
+
 	mouse_x, mouse_y = pygame.mouse.get_pos()
 	renderer.SetMousePos(mouse_x, mouse_y)
 	renderer.time += deltaTime
+	renderer.camera.LookAt(nadeModel.translation)
+	renderer.camera.Orbit(nadeModel.translation, camDistance, camAngle)
 	renderer.Render()
 	pygame.display.flip()
 
