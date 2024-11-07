@@ -5,6 +5,11 @@ from buffer import Buffer
 from shaders import *
 from model import Model
 
+MAX_CAM_DISTANCE = 8
+MIN_CAM_DISTANCE = 1.5
+MAX_CAM_HEIGHT = 4
+MIN_CAM_HEIGHT = -4
+
 width = 600
 height = 600
 
@@ -78,18 +83,35 @@ while isRunning:
 	if keys[K_LEFT]:
 		nadeModel.rotation.y -= 45 * deltaTime
 
-	elif keys[K_RIGHT]:
+	if keys[K_RIGHT]:
 		nadeModel.rotation.y += 45 * deltaTime
 
-	elif keys[K_a]:
+	if keys[K_a]:
 		camAngle -= 45 * deltaTime
 
-	elif keys[K_d]:
+	if keys[K_d]:
 		camAngle += 45 * deltaTime
-	elif keys[K_s]:
+
+	if keys[K_w]:
+		newPos = renderer.camera.position.y + 2 * deltaTime
+		if newPos > MAX_CAM_HEIGHT:
+			newPos = renderer.camera.position.y
+		renderer.camera.position.y = newPos
+
+	if keys[K_s]:
+		newPos = renderer.camera.position.y - 2 * deltaTime
+		if newPos < MIN_CAM_HEIGHT:
+			newPos = renderer.camera.position.y
+		renderer.camera.position.y = newPos
+	if keys[K_UP]:
 		camDistance -= 2 * deltaTime
-	elif keys[K_w]:
+		if camDistance  < MIN_CAM_DISTANCE:
+			camDistance = MIN_CAM_DISTANCE
+
+	if keys[K_DOWN]:
 		camDistance += 2 * deltaTime
+		if camDistance > MAX_CAM_DISTANCE:
+			camDistance = MAX_CAM_DISTANCE
 
 	mouse_x, mouse_y = pygame.mouse.get_pos()
 	renderer.SetMousePos(mouse_x, mouse_y)
