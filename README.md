@@ -2,6 +2,11 @@
 ## Autor: Jose Merida | 24 de Noviembre 2024
 Los alumnos deben entregar un Diorama creado en base al renderer de OpenGL que se trabajó en clase. Un diorama es "un tipo de maqueta que muestra figuras humanas, vehículos, animales o incluso seres imaginarios como punto focal de su composición, presentados dentro de un entorno y con el propósito de representar una escena". En otras palabras, es una simple presentación de una escena 3D.
 
+## Video Demostrativo
+[Link](https://youtu.be/3bnXfLrfhv0)
+
+Se muestran la mayoría de los shaders y funcionalidades que se implementaron a detalle.
+
 ## Ubicacion de Archivos
 - Models: Los modelos utilizados en el programa
 - Textures: Los archivos BMP utilizados como textura para los modelos dentro del programa
