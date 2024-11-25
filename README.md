@@ -73,3 +73,8 @@ Aqui simplemente le pedi a ChatGPT que generara unos .obj
 https://chatgpt.com/share/67440ab6-b320-8007-8bd8-6e91269035af
 
 Aquí quería verificar cómo agregarle un Offset a los modelos, ya que algunos estaban como "elevados" y el centro de su translation matrix estaba abajo de ellos. Solo apliqué un Offset de tipo glm.vec3 y cada vez que se llama el orbitar, orbita el translation + offset. También pregunté sobre sonidos en Pygame e hice un debug de por qué las texturas no estaban funcionando. Tuve que modificar el tamaño de las imágenes y los comandos de Pygame son bastante simples.
+
+### Energy Shader
+
+No sé como linkear un Chat de Copilot, pero me ayudo a definir el Energy Shader y solucionar cómo animarlo. 
+
