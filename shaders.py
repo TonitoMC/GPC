@@ -101,6 +101,52 @@ void main()
 }
 """
 
+energy_shader = """
+#version 450 core
+
+in vec2 outTextCoords;
+in vec3 outNormals;
+in vec3 fragPosition;
+
+out vec4 fragColor;
+
+uniform sampler2D tex;    // Base texture (optional)
+uniform float time;
+
+float random(vec2 coords) {
+    return fract(sin(dot(coords, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+float noise(vec2 coords) {
+    vec2 i = floor(coords);
+    vec2 f = fract(coords);
+    float a = random(i);
+    float b = random(i + vec2(1.0, 0.0));
+    float c = random(i + vec2(0.0, 1.0));
+    float d = random(i + vec2(1.0, 1.0));
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+}
+
+void main()
+{
+    vec2 uv = outTextCoords * 10.0;
+    float t = time * 0.5;
+
+    float energyPattern = noise(uv + vec2(t, -t)) * 0.5 
+                        + noise(uv * 2.0 - vec2(-t, t)) * 0.25;
+
+    energyPattern = pow(energyPattern, 3.0) * 2.0;
+
+    vec3 energyColor = vec3(0.1, 0.4, 1.0) * energyPattern;
+
+    vec3 baseColor = texture(tex, outTextCoords).rgb;
+    vec3 finalColor = baseColor + energyColor;
+
+    fragColor = vec4(finalColor, 1.0);
+}
+"""
+
 # Shader de efecto 'breathing', aumenta y disminuye el tamaño basado en una onda
 # sinusoidal
 breathing_shader = """

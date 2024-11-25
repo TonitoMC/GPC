@@ -69,10 +69,29 @@ class Renderer(object):
 			glUniform1f(glGetUniformLocation(self.active_shaders, "mouse_y"), normalized_y)
 
 		for obj in self.scene:
-			if self.active_shaders is not None:
+			# Use the shader specific to this object
+			if obj.shaders is not None:
+				glUseProgram(obj.shaders)
+				
+				current_view_matrix = self.camera.GetViewMatrix()
+				current_projection_matrix = self.camera.GetProjectionMatrix()
+				glUniform1f(glGetUniformLocation(obj.shaders, "time"), self.time)
+				glUniformMatrix4fv(glGetUniformLocation(obj.shaders, "viewMatrix"),
+								1, GL_FALSE, glm.value_ptr(current_view_matrix))
+				glUniformMatrix4fv(glGetUniformLocation(obj.shaders, "projectionMatrix"),
+								1, GL_FALSE, glm.value_ptr(current_projection_matrix))
+
+				# Pass normalized mouse position to shaders
+				normalized_x, normalized_y = self.normalize_mouse_position()
+				glUniform1f(glGetUniformLocation(obj.shaders, "mouse_x"), normalized_x)
+				glUniform1f(glGetUniformLocation(obj.shaders, "mouse_y"), normalized_y)
+
+				# Update the model matrix for the specific object
 				current_model_matrix = obj.GetModelMatrix()
-				glUniformMatrix4fv(glGetUniformLocation(self.active_shaders, "modelMatrix"),
+				glUniformMatrix4fv(glGetUniformLocation(obj.shaders, "modelMatrix"),
 								1, GL_FALSE, glm.value_ptr(current_model_matrix))
+
+			# Render the object
 			obj.Render()
 
 
