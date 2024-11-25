@@ -31,9 +31,9 @@ Mouse:
 ### Seleccion de Objeto a Orbitar
 Teclado
 - '0' -> Piso + un Offset, el centro / overview de la escena
-- '1' -> Torreta de Killjoy
-- '2' -> Dizzy / Flash de Gekko
-- '3' -> Granada de Razes
+- '1' -> Torreta de Killjoy + Efecto de Sonido
+- '2' -> Dizzy / Flash de Gekko + Efecto de Sonido
+- '3' -> Granada de Razes + Efecto de Sonido
 
 ## Objetos y Shaders:
 
