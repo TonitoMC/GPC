@@ -16,6 +16,11 @@ height = 600
 
 pygame.init()
 pygame.mixer.init()
+pygame.mixer.music.load('audio/theme.mp3')
+pygame.mixer.music.play()
+pygame.mixer.music.set_volume(0.075)
+
+pygame.mixer.music.play(loops=-1)
 
 screen = pygame.display.set_mode((width, height), pygame.OPENGL | pygame.DOUBLEBUF)
 
@@ -78,6 +83,7 @@ turretModel.rotation.y -= 15
 turretModel.translation.x = -6.6
 turretModel.translation.y = -2
 turretModel.translation.z = -15
+turretModel.SetCoordsOffset(glm.vec3(0,0.25,0))
 
 # Piso
 floor = Model('models/floor.obj', vshader, fshader)
@@ -88,6 +94,7 @@ floor.translation.y = -3
 floor.rotation.y += 180
 floor.translation.z = -15
 floor.scale = (3, 3, 3)
+floor.SetCoordsOffset(glm.vec3(0,1,0))
 
 # Pared
 wall = Model('models/floor.obj', vshader, fshader)
@@ -129,38 +136,30 @@ while isRunning:
                 isRunning = False
             elif event.key == pygame.K_0:
                 orbittedModel = floor
+                camDistance = 5
             elif event.key == pygame.K_1:
                 orbittedModel = turretModel
+                camDistance = 2
                 if current_sound:
                     current_sound.stop()
                 turretSound.play()
                 current_sound = turretSound
             elif event.key == pygame.K_2:
                 orbittedModel = gekkoFlash
+                camDistance = 2
                 if current_sound:
                     current_sound.stop()
                 dizzySound.play()
                 current_sound = dizzySound
             elif event.key == pygame.K_3:
                 orbittedModel = nadeModel
+                camDistance = 2
                 if current_sound:
                     current_sound.stop()
                 nadeSound.play()
                 current_sound = nadeSound
             elif event.key == pygame.K_4:
                 vshader = bubble_shader
-                renderer.SetShaders(vshader, fshader)
-            elif event.key == pygame.K_5:
-                fshader = fragment_shader
-                renderer.SetShaders(vshader, fshader)
-            elif event.key == pygame.K_6:
-                fshader = aberration_shader
-                renderer.SetShaders(vshader, fshader)
-            elif event.key == pygame.K_7:
-                fshader = grayscale_shader
-                renderer.SetShaders(vshader, fshader)
-            elif event.key == pygame.K_8:
-                fshader = light_mouse_shader
                 renderer.SetShaders(vshader, fshader)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
@@ -218,8 +217,8 @@ while isRunning:
     mouse_x, mouse_y = pygame.mouse.get_pos()
     renderer.SetMousePos(mouse_x, mouse_y)
     renderer.time += deltaTime
-    renderer.camera.LookAt(orbittedModel.translation)
-    renderer.camera.Orbit(orbittedModel.translation, camDistance, camAngle)
+    renderer.camera.LookAt(orbittedModel.translation + orbittedModel.coordsOffset)
+    renderer.camera.Orbit(orbittedModel.translation  + orbittedModel.coordsOffset, camDistance, camAngle)
     renderer.Render()
     pygame.display.flip()
 

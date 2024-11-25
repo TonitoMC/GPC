@@ -18,8 +18,11 @@ class Model(object):
         self.rotation = glm.vec3(0, 0, 0)
         self.scale = glm.vec3(1, 1, 1)
 
-        # Compile and set the shaders
+        self.coordsOffset = glm.vec3(0,0,0)
         self.shaders = self.CompileShaders(vShader, fShader)
+
+    def SetCoordsOffset(self, offset):
+        self.coordsOffset = offset
 
     def BuildBuffer(self):
         data = []
@@ -96,7 +99,6 @@ class Model(object):
         if self.shaders is not None:
             glUseProgram(self.shaders)
 
-            # Pass uniforms to the shaders
             model_matrix = self.GetModelMatrix()
             glUniformMatrix4fv(glGetUniformLocation(self.shaders, "modelMatrix"),
                                1, GL_FALSE, glm.value_ptr(model_matrix))

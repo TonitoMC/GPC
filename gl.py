@@ -69,7 +69,6 @@ class Renderer(object):
 			glUniform1f(glGetUniformLocation(self.active_shaders, "mouse_y"), normalized_y)
 
 		for obj in self.scene:
-			# Use the shader specific to this object
 			if obj.shaders is not None:
 				glUseProgram(obj.shaders)
 				
