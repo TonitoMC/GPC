@@ -63,3 +63,13 @@ El efecto cambia los colores a blanco y negro y agrega estática animada
 Figuras planas, las texturas fueron tomadas utilizando screenshots de Valorant
 ![image](https://github.com/user-attachments/assets/fb655d64-93f8-4d6e-9740-8764666d884f)
 
+## Herramientas de IA
+### Generacion Piso + Caja
+https://chatgpt.com/share/67440a92-3c7c-8007-8db2-15f2af05f906
+
+Aqui simplemente le pedi a ChatGPT que generara unos .obj
+
+### Model Offset + Sonidos + Debug Texturas
+https://chatgpt.com/share/67440ab6-b320-8007-8bd8-6e91269035af
+
+Aquí quería verificar cómo agregarle un Offset a los modelos, ya que algunos estaban como "elevados" y el centro de su translation matrix estaba abajo de ellos. Solo apliqué un Offset de tipo glm.vec3 y cada vez que se llama el orbitar, orbita el translation + offset. También pregunté sobre sonidos en Pygame e hice un debug de por qué las texturas no estaban funcionando. Tuve que modificar el tamaño de las imágenes y los comandos de Pygame son bastante simples.
